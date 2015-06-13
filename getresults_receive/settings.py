@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'getresults',
+    'getresults_aliquot',
     'getresults_receive',
 )
 

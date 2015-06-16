@@ -1,6 +1,6 @@
 from django.db import models
 
-from edc_base.model.models import BaseUuidModel
+from edc_base.model.models import BaseUuidModel, HistoricalRecords
 from edc_constants.choices import GENDER
 
 
@@ -30,6 +30,8 @@ class Patient(BaseUuidModel):
     identity = models.CharField(
         max_length=25,
         null=True)
+
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.patient_identifier

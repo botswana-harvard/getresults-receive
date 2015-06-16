@@ -2,7 +2,7 @@ from django.db import models
 
 from .patient import Patient
 
-from edc_base.model.models import BaseUuidModel
+from edc_base.model.models import BaseUuidModel, HistoricalRecords
 
 
 class Receive(BaseUuidModel):
@@ -13,6 +13,8 @@ class Receive(BaseUuidModel):
     receive_datetime = models.DateTimeField()
 
     patient = models.ForeignKey(Patient)
+
+    history = HistoricalRecords()
 
     def __str__(self):
         return '{}: {}'.format(self.receive_identifier, self.receive_datetime.strftime('%Y-%m-%d %H:%M'))

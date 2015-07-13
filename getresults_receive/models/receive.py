@@ -1,8 +1,10 @@
 from django.db import models
 
-from .patient import Patient
-
 from edc_base.model.models import BaseUuidModel, HistoricalRecords
+
+from .patient import Patient
+from ..receive_identifier import ReceiveIdentifier
+from .receive_identifier_history import ReceiveIdentifierHistory
 
 
 class Receive(BaseUuidModel):
@@ -18,6 +20,17 @@ class Receive(BaseUuidModel):
 
     def __str__(self):
         return '{}: {}'.format(self.receive_identifier, self.receive_datetime.strftime('%Y-%m-%d %H:%M'))
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            try:
+                receive_identifier_history = ReceiveIdentifierHistory.objects.latest('id')
+                last_identifier = receive_identifier_history.identifier
+            except ReceiveIdentifierHistory.DoesNotExist:
+                last_identifier = None
+            identifier = ReceiveIdentifier(last_identifier)
+            self.receive_identifier = identifier.identifier
+        super(Receive, self).save(*args, **kwargs)
 
     class Meta:
         app_label = 'getresults_receive'

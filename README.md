@@ -1,5 +1,10 @@
 # getresults-receive
 
+The `Receive` model automatically allocates a unique receiving identifier for a new specimen.
+
+	>>>receive = Receive.objects.create(patient=self.patient)
+    >>>receive.receive_identifier
+    'AAA0001'
 
 In settings, add:
 

@@ -3,6 +3,8 @@ from django.db import models
 from edc_base.model.models import BaseUuidModel, HistoricalRecords
 from edc_constants.choices import GENDER
 
+from .identifiers import PatientIdentifier
+
 
 class Patient(BaseUuidModel):
 
@@ -32,6 +34,11 @@ class Patient(BaseUuidModel):
         null=True)
 
     history = HistoricalRecords()
+
+    def save(self, *args, **kwargs):
+        if not self.id and not self.patient_identifier:
+            self.patient_identifier = PatientIdentifier().identifier
+        super(Patient, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.patient_identifier

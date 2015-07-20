@@ -2,7 +2,7 @@ from django.test.testcases import TestCase
 from django.utils import timezone
 from django.db import IntegrityError
 
-from getresults_receive.models import Receive, Patient, ReceiveIdentifier, ReceiveIdentifierHistory
+from getresults_receive.models import Receive, Patient, ReceiveIdentifier, IdentifierHistory
 
 
 class TestReceive(TestCase):
@@ -23,19 +23,33 @@ class TestReceive(TestCase):
             patient=self.patient)
         self.assertEqual(receive.receive_identifier, 'AAA0001')
 
+    def test_update_identifier_history_thru_model(self):
+        receive = Receive.objects.create(
+            patient=self.patient)
+        self.assertEqual(receive.receive_identifier, 'AAA0001')
+        self.assertEqual(
+            IdentifierHistory.objects.get(identifier=receive.receive_identifier).identifier,
+            receive.receive_identifier)
+
+    def test_update_identifier_history(self):
+        receive_identifier = ReceiveIdentifier()
+        self.assertEqual(
+            IdentifierHistory.objects.get(identifier=receive_identifier.identifier).identifier,
+            receive_identifier.identifier)
+
     def test_increment_identifier(self):
         receive = Receive.objects.create(
             patient=self.patient)
         self.assertEqual(receive.receive_identifier, 'AAA0001')
-        new = ReceiveIdentifier(receive.receive_identifier)
+        new = ReceiveIdentifier()
         self.assertEqual(new.identifier, 'AAA0002')
-        new = ReceiveIdentifier(new.identifier)
+        new = ReceiveIdentifier()
         self.assertEqual(new.identifier, 'AAA0003')
-        new = ReceiveIdentifier(new.identifier)
+        new = ReceiveIdentifier()
         self.assertEqual(new.identifier, 'AAA0004')
-        new = ReceiveIdentifier(new.identifier)
+        new = ReceiveIdentifier()
         self.assertEqual(new.identifier, 'AAA0005')
-        new = ReceiveIdentifier(new.identifier)
+        new = ReceiveIdentifier()
         self.assertEqual(new.identifier, 'AAA0006')
 
     def test_receive_many(self):
@@ -64,13 +78,13 @@ class TestReceive(TestCase):
         receive = Receive.objects.create(
             patient=patient)
         self.assertIsInstance(
-            ReceiveIdentifierHistory.objects.get(identifier=receive.receive_identifier),
-            ReceiveIdentifierHistory)
+            IdentifierHistory.objects.get(identifier=receive.receive_identifier),
+            IdentifierHistory)
         receive = Receive.objects.create(
             patient=patient)
         self.assertIsInstance(
-            ReceiveIdentifierHistory.objects.get(identifier=receive.receive_identifier),
-            ReceiveIdentifierHistory)
+            IdentifierHistory.objects.get(identifier=receive.receive_identifier),
+            IdentifierHistory)
 
     def test_receive_integrity(self):
         patient = self.patient
@@ -90,6 +104,6 @@ class TestReceive(TestCase):
         self.assertEqual(receive.receive_identifier, receive_identifier)
         receive.save()
         self.assertIsInstance(
-            ReceiveIdentifierHistory.objects.get(identifier=receive.receive_identifier),
-            ReceiveIdentifierHistory)
+            IdentifierHistory.objects.get(identifier=receive.receive_identifier),
+            IdentifierHistory)
         self.assertEqual(receive.receive_identifier, receive_identifier)

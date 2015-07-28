@@ -18,7 +18,7 @@ class DashboardView(TemplateView):
             project_name=self.project_name,
             sections=self.sections,
             title="LIMS",
-            header=['Patient Identifier', 'Receive Identifier', 'Datetime'],
+            header=['Patient Identifier', 'Receive Identifier', ' Receive Datetime'],
             header_count=3,
             received=self.received,
             received_count=self.received.count(),
@@ -28,7 +28,7 @@ class DashboardView(TemplateView):
     @property
     def sections(self):
         """Override in to give a list of sections within the project"""
-        return ['Receive', 'Order', 'Validate', 'Result']
+        return 'Receive'
 
     @property
     def project_name(self):

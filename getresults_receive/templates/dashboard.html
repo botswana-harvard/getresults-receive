@@ -103,24 +103,23 @@
             </div>
           </div>
 
-          <h2 class="sub-header">Section title</h2>
+          <h2 class="sub-header">{{section}}</h2>
           <div class="table-responsive">
             <table class="table table-striped">
             <tr>
               {% for head in header %}
-              
                 <td>
                   <th>{{head}}</th>
                 </td>
               {% endfor %}
-              </tr>
-              {% for receive in received %}
+            </tr>
+            {% for receive in received %}
               <tr>
                 <td>{{receive.patient}}</td>
                 <td>{{receive.receive_identifier}}</td>
                 <td>{{receive.receive_datetime}}</td>
               </tr>
-              {% endfor %}
+            {% endfor %}
             </table>
           </div>
         </div>

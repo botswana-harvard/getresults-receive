@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from getresults_identifier import AlphanumericIdentifier
 
 from .identifier_history import IdentifierHistory
@@ -30,7 +32,16 @@ class PatientIdentifier(BaseIdentifier):
 
 class ReceiveIdentifier(BaseIdentifier):
 
-    alpha_pattern = r'^[A-Z]{3}$'
-    numeric_pattern = r'^[0-9]{4}$'
-    seed = ('AAA', '0000')
     identifier_type = 'receive'
+
+    @property
+    def alpha_pattern(self):
+        return settings.RECEIVE_IDENTIFIER_ALPHA_PATTERN
+
+    @property
+    def numeric_pattern(self):
+        return settings.RECEIVE_IDENTIFIER_NUMERIC_PATTERN
+
+    @property
+    def seed(self):
+        return settings.RECEIVE_IDENTIFIER_SEED

@@ -18,6 +18,9 @@ class Receive(BaseUuidModel):
     receive_datetime = models.DateTimeField(
         default=timezone.now)
 
+    collection_datetime = models.DateTimeField(
+        default=timezone.now)
+
     patient = models.ForeignKey(Patient)
 
     history = HistoricalRecords()

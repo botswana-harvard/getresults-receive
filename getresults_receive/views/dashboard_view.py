@@ -18,7 +18,7 @@ class DashboardView(TemplateView):
             project_name=self.project_name,
             sections=self.sections,
             title="LIMS",
-            header=['Patient Identifier', 'Receive Identifier', ' Receive Datetime'],
+            header=['Patient Identifier', 'Receive Identifier', 'Collection Datetime',' Receive Datetime', 'Receive'],
             header_count=3,
             received=self.received,
             received_count=self.received.count(),

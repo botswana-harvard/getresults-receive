@@ -16,9 +16,10 @@ class DashboardView(TemplateView):
         context = super().get_context_data(**kwargs)
         context.update(
             project_name=self.project_name,
+            sections_head='Received',
             sections=self.sections,
-            title="LIMS",
-            header=['Patient Identifier', 'Receive Identifier', 'Collection Datetime',' Receive Datetime', 'Receive'],
+            title="Receive",
+            header=['Patient Identifier', 'Receive Identifier', 'Collection Datetime', 'Receive Datetime', 'Receive'],
             header_count=3,
             received=self.received,
             received_count=self.received.count(),
@@ -28,7 +29,7 @@ class DashboardView(TemplateView):
     @property
     def sections(self):
         """Override in to give a list of sections within the project"""
-        return 'Receive'
+        return ['Order by Date Received', ' Received by User', 'View All Received' ]
 
     @property
     def project_name(self):
@@ -40,3 +41,5 @@ class DashboardView(TemplateView):
     @property
     def received(self):
         return Receive.objects.filter()
+
+    

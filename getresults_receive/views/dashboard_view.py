@@ -20,7 +20,7 @@ class DashboardView(TemplateView):
             header=['Patient Identifier', 'Receive Identifier', 'Collection Datetime', 'Receive Datetime', 'Receive'],
             header_count=3,
             received=self.received(),
-            received_count=self.received.count(),
+            received_count=self.received().count(),
         )
         return context
 

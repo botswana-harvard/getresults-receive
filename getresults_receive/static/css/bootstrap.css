@@ -254,6 +254,7 @@ th {
   .table td,
   .table th {
     background-color: #fff !important;
+    text-align: center;
   }
   .table-bordered th,
   .table-bordered td {

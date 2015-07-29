@@ -14,7 +14,7 @@ def user_login(request):
             login(request, user)
             return HttpResponseRedirect(reverse('dashboard'))
     else:
-        print ("Invalid login details")
+        print("Invalid login details")
         template = 'login.html'
         return render_to_response(
             template,

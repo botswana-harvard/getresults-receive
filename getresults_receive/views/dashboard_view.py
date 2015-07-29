@@ -9,37 +9,30 @@ class DashboardView(TemplateView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        _project_name = None
-        _sections = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update(
-            project_name=self.project_name,
+            project_name=self.project_name(),
             sections_head='Received',
-            sections=self.sections,
+            sections=self.sections(),
             title="Receive",
             header=['Patient Identifier', 'Receive Identifier', 'Collection Datetime', 'Receive Datetime', 'Receive'],
             header_count=3,
-            received=self.received,
+            received=self.received(),
             received_count=self.received.count(),
         )
         return context
 
-    @property
     def sections(self):
         """Override in to give a list of sections within the project"""
-        return ['Order by Date Received', ' Received by User', 'View All Received' ]
+        return ['Order by Date Received', ' Received by User', 'View All Received']
 
-    @property
     def project_name(self):
         if 'PROJECT_NAME' in dir(settings):
             return settings.PROJECT_NAME
         else:
             return ''
 
-    @property
     def received(self):
         return Receive.objects.filter()
-
-    

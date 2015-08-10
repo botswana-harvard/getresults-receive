@@ -12,7 +12,7 @@ def user_login(request):
     if user:
         if user.is_active:
             login(request, user)
-            return HttpResponseRedirect(reverse('dashboard'))
+            return HttpResponseRedirect(reverse('receive'))
     else:
         print("Invalid login details")
         template = 'login.html'

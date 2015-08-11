@@ -1,7 +1,6 @@
 from django.views.generic import TemplateView
 from django.conf import settings
-
-from ..models import Receive
+from _datetime import datetime
 
 
 class ReceiveOrderView(TemplateView):
@@ -14,14 +13,14 @@ class ReceiveOrderView(TemplateView):
         context = super().get_context_data(**kwargs)
         context.update(
             project_name=self.project_name(),
-            sections_head='Received',
+            sections_head='Receive Order',
             sections=self.sections(),
-            title="Receive",
-            header=['Patient Identifier', 'Receive Identifier', 'Collection Datetime', 'Receive Datetime', ''],
+            title="Receive Order",
+            header=['', 'Patient Identifier', 'Received Datetime', 'Order 1', 'Order 2'],
             labels={'Add': 'Receive new samples', 'View': 'View Received samples', 'Remove': 'Remove received samples'},
-            header_count=3,
-            received=self.received(),
-            received_count=self.received().count(),
+            aliquots=[n for n in range(0, 10)],
+            received_count=10,
+            received_date=str(datetime.now())
         )
         return context
 
@@ -34,6 +33,3 @@ class ReceiveOrderView(TemplateView):
             return settings.PROJECT_NAME
         else:
             return ''
-
-    def received(self):
-        return Receive.objects.filter()

@@ -2,12 +2,13 @@
 
 {% block section_headers%}
     <!-- Button trigger modal -->
-	<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#receiveModal">
+	<button type="button" class="btn btn-primary btn-lg" >
 	  Receive Batch
 	</button>
 	<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#">
 	  Receive And Order
 	</button>
+	 <a href="#" class="btn btn-primary btn-lg" role="button">Link Button</a>
 	<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#">
 	  Receive Sample
 	</button>
@@ -54,37 +55,39 @@
 	  </div>
 	</div>
 {% endblock  %}
+
 {% block content %}
-    <h2 class="sub-header">{{section_head}}</h2>
-    <div class="table-responsive">
-      <table class="table table-striped">
-      <tr>
-        {% for head in header %}
-            <th>{{head}}</th>
-        {% endfor %}
-      </tr>
-      {% for receive in received %}
-        <tr>
-          <td>{{receive.patient}}</td>
-          <td>{{receive.receive_identifier}}</td>
-          <td>{{receive.receive_datetime}}</td>
-          <td>{{receive.collection_datetime}}</td>
-          <td>
-            <div class="checkbox">
-              <input type="checkbox">
-            </div>
-            </div>
-          </td>
-        </tr>
-      {% endfor %}
-      </table>
-    </div>
-    <div class="btn-group btn-default">
-      <button class="btn btn-default" id="receive_selected"> Receive
-      </button>
-      <button class="btn btn-default" id="receive_all"> Receive All
-      </button>
-      <button class="btn btn-default" id="remove"> Remove Selected
-      </button>
-    </div>
+	<div class="container-fluid">
+	<div class="row">
+		<!--   -->
+		<div class="col-md-9 table-responsive">
+			<table class="table table-striped">
+			      <tr>
+			        {% for head in header %}
+			            <th>{{head}}</th>
+			        {% endfor %}
+			      </tr>
+			      {% for aliquot in aliquots %}
+			        <tr>
+			          <td>
+			            <div class="checkbox">
+			              <input type="checkbox">
+			            </div>
+			          </td>
+			          <td>Aliquot {{aliquot}}</td>
+			          <td>{{received_date}}</td>
+			          <td></td>
+			          <td></td>
+			          <td>
+			            <div class="">
+			              <button type="button" class="btn btn-default">Order</button>
+			            </div>
+			          </td>
+			        </tr>
+			      {% endfor %}
+			      </table>
+			 
+			 </div>
+		</div>
+	</div> 
 {% endblock %}

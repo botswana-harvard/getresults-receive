@@ -17,7 +17,7 @@ class ReceiveView(TemplateView):
             sections_head='Received',
             sections=self.sections(),
             title="Receive",
-            header=['Patient Identifier', 'Receive Identifier', 'Collection Datetime', 'Receive Datetime', 'Receive'],
+            header=['Patient Identifier', 'Receive Identifier', 'Collection Datetime', 'Receive Datetime', ''],
             labels={'Add': 'Receive new samples', 'View': 'View Received samples', 'Remove': 'Remove received samples'},
             header_count=3,
             received=self.received(),

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block section_headers%}
+    <!-- Button trigger modal -->
+	<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#receiveModal">
+	  Receive Batch
+	</button>
+	<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#">
+	  Receive And Order
+	</button>
+	<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#">
+	  Receive Sample
+	</button>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="receiveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog modal-lg" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Receive</h4>
+	      </div>
+	      <div class="modal-body">
+	        <form class="form-inline" action="{% url 'receive_sample' %}" method="post" enctype="multipart/form-data">
+	            {% csrf_token %}
+				<div class="form-group">
+					<label for="collect_datetime"></label>
+					<input type="text" class="form-control" id="patient_id" name="patient_id" placeholder="Patient Identifier">
+				</div>
+				<div class="form-group">
+					<label for="collect_datetime"></label>
+					<input type="text" class="form-control" id="collect_datetime" name="collect_datetime" placeholder="Colletion Datetime">
+				</div>
+				<div class="form-group">
+					<label for="rec_datetime"></label>
+					<input type="text" class="form-control" id="rec_datetime" name="rec_datetime" placeholder="Receive Datetime">
+				</div>
+				<div class="checkbox">
+			    <label>
+			      <input type="checkbox">
+			    </label>
+			  </div>
+			
+			<div class="modal-footer">
+				<div class="form-group">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			        <button type="button" class="btn btn-primary" type="submit" value="submit" name="receive" id="receive">Receive</button>
+			        <button type="button" class="btn btn-primary" type="submit" name="receive_all" id="receive_all">Receive All</button>
+		        </div>
+	      </div>
+	      </form>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+{% endblock  %}
+{% block content %}
+    <h2 class="sub-header">{{section_head}}</h2>
+    <div class="table-responsive">
+      <table class="table table-striped">
+      <tr>
+        {% for head in header %}
+            <th>{{head}}</th>
+        {% endfor %}
+      </tr>
+      {% for receive in received %}
+        <tr>
+          <td>{{receive.patient}}</td>
+          <td>{{receive.receive_identifier}}</td>
+          <td>{{receive.receive_datetime}}</td>
+          <td>{{receive.collection_datetime}}</td>
+          <td>
+            <div class="checkbox">
+              <input type="checkbox">
+            </div>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+      </table>
+    </div>
+    <div class="btn-group btn-default">
+      <button class="btn btn-default" id="receive_selected"> Receive
+      </button>
+      <button class="btn btn-default" id="receive_all"> Receive All
+      </button>
+      <button class="btn btn-default" id="remove"> Remove Selected
+      </button>
+    </div>
+{% endblock %}

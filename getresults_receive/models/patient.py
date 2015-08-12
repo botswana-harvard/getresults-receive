@@ -1,4 +1,5 @@
 from django.db import models
+from django_crypto_fields.fields import FirstnameField, LastnameField
 
 from edc_base.model.models import BaseUuidModel, HistoricalRecords
 from edc_constants.choices import GENDER
@@ -10,6 +11,12 @@ class Patient(BaseUuidModel):
 
     patient_identifier = models.CharField(
         max_length=25)
+
+    first_name = FirstnameField(
+        verbose_name="First Name")
+
+    last_name = LastnameField(
+        verbose_name="Last Name")
 
     protocol = models.CharField(
         max_length=25,

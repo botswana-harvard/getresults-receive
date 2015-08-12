@@ -6,7 +6,7 @@ import unittest
 
 
 class TestOrderFunctional(unittest.TestCase):
-    server_url = 'http://localhost:8000/'
+    server_url = 'http://localhost:7500/'
 
     def setUp(self):
         self.browser = webdriver.Chrome()

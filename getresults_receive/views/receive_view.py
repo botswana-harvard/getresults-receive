@@ -17,7 +17,7 @@ class ReceiveView(TemplateView):
             sections_head='Received',
             sections=self.sections(),
             title="Receive",
-            header=['Patient Identifier', 'Receive Identifier', 'Collection Datetime', 'Receive Datetime', ''],
+            header=['Patient Identifier', 'Receive Identifier', 'Collection Datetime', 'Receive Datetime', 'Sample Type', 'Protocol Number'],
             labels={'Add': 'Receive new samples', 'View': 'View Received samples', 'Remove': 'Remove received samples'},
             header_count=3,
             range_to_receive=range(10),
@@ -28,7 +28,7 @@ class ReceiveView(TemplateView):
 
     def sections(self):
         """Override in to give a list of sections within the project"""
-        return ['Order by Date Received', ' Received by User', 'View All Received']
+        return ['Order by Date Received', 'Order by Protocol', 'Order by Sample Type', 'Received by User', 'View All Received']
 
     def project_name(self):
         if 'PROJECT_NAME' in dir(settings):

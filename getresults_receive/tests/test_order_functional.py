@@ -1,4 +1,3 @@
-#from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import time
 import unittest
 from selenium import webdriver

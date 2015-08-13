@@ -61,3 +61,8 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Keys
+*.pem
+*.key
+

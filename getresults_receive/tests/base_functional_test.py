@@ -1,19 +1,26 @@
 import time
-import unittest
+
+from django.test import LiveServerTestCase
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 
-class BaseFunctionalBase(unittest.TestCase):
-    server_url = 'http://localhost:8000/'
-    browser = webdriver.Chrome()
+class BaseFunctionalTest(LiveServerTestCase):
 
     def setUp(self):
-        self.browser.get(self.server_url)
-        time.sleep(3)
+        super().setUp()
+        try:
+            self.browser = webdriver.Chrome()
+        except AttributeError:
+            self.browser = webdriver.Firefox()
 
     def tearDown(self):
-#         self.browser.get(self.server_url+"?testing=remove")
         self.browser.quit()
+
+    def login(self):
+        self.browser.get(self.live_server_url)
+        self.browser.find_element_by_id('username').send_keys('rumplestiltskin')
+        self.browser.find_element_by_id('password').send_keys('sheepshanks' + Keys.RETURN)
 
     def switch_to_new_window(self, text_in_element, element_id):
         retries = 60

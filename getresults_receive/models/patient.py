@@ -13,9 +13,13 @@ class Patient(BaseUuidModel):
         max_length=25)
 
     first_name = FirstnameField(
+        null=True,
+        blank=True,
         verbose_name="First Name")
 
     last_name = LastnameField(
+        null=True,
+        blank=True,
         verbose_name="Last Name")
 
     protocol = models.CharField(

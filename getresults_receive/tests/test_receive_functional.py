@@ -1,30 +1,21 @@
 import time
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+
 from django.contrib.auth.models import User
-from django.test import LiveServerTestCase
+
+from .base_functional_test import BaseFunctionalTest
 
 
-class TestReceiveFunctional(LiveServerTestCase):
-
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-        User.objects.create_superuser('rumplestiltskin', 'django@bhp.org.bw', 'sheepshanks')
-
-    def tearDown(self):
-        self.browser.quit()
-
-    def login(self):
-        self.browser.get(self.live_server_url)
-        self.browser.find_element_by_id('username').send_keys('rumplestiltskin')
-        self.browser.find_element_by_id('password').send_keys('sheepshanks' + Keys.RETURN)
+class TestReceiveFunctional(BaseFunctionalTest):
 
     def test_login(self):
         # Only authorized users can access the system
+        User.objects.create_superuser('rumplestiltskin', 'django@bhp.org.bw', 'sheepshanks')
+        self.assertEquals(User.objects.all().count(), 1)
         self.browser.get(self.live_server_url)
         self.browser.find_element_by_id('username').send_keys('rumplestiltskin')
         self.browser.find_element_by_id('password').send_keys('sheepshanks')
         self.browser.find_element_by_id('login').click()
+        time.sleep(1)
         self.assertIn('receive', self.browser.title.lower())
 
     def test_batch_receive_pop(self):

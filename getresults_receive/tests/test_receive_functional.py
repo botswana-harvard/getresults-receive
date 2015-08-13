@@ -9,7 +9,6 @@ class TestReceiveFunctional(BaseFunctionalTest):
 
     def test_login(self):
         # Only authorized users can access the system
-        User.objects.create_superuser('rumplestiltskin', 'django@bhp.org.bw', 'sheepshanks')
         self.assertEquals(User.objects.all().count(), 1)
         self.browser.get(self.live_server_url)
         self.browser.find_element_by_id('username').send_keys('rumplestiltskin')

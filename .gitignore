@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 .pydevproject
+.DS_Store
 .project
 .settings
 test-*

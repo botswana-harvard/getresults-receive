@@ -21,12 +21,12 @@ class TestReceive(TestCase):
     def test_create_identifier(self):
         receive = Receive.objects.create(
             patient=self.patient)
-        self.assertEqual(receive.receive_identifier, 'AAA0001')
+        self.assertEqual(receive.receive_identifier, 'AAA00015')
 
     def test_update_identifier_history_thru_model(self):
         receive = Receive.objects.create(
             patient=self.patient)
-        self.assertEqual(receive.receive_identifier, 'AAA0001')
+        self.assertEqual(receive.receive_identifier, 'AAA00015')
         self.assertEqual(
             IdentifierHistory.objects.get(identifier=receive.receive_identifier).identifier,
             receive.receive_identifier)
@@ -40,38 +40,38 @@ class TestReceive(TestCase):
     def test_increment_identifier(self):
         receive = Receive.objects.create(
             patient=self.patient)
-        self.assertEqual(receive.receive_identifier, 'AAA0001')
+        self.assertEqual(receive.receive_identifier, 'AAA00015')
         new = ReceiveIdentifier()
-        self.assertEqual(new.identifier, 'AAA0002')
+        self.assertEqual(new.identifier, 'AAA00023')
         new = ReceiveIdentifier()
-        self.assertEqual(new.identifier, 'AAA0003')
+        self.assertEqual(new.identifier, 'AAA00031')
         new = ReceiveIdentifier()
-        self.assertEqual(new.identifier, 'AAA0004')
+        self.assertEqual(new.identifier, 'AAA00049')
         new = ReceiveIdentifier()
-        self.assertEqual(new.identifier, 'AAA0005')
+        self.assertEqual(new.identifier, 'AAA00057')
         new = ReceiveIdentifier()
-        self.assertEqual(new.identifier, 'AAA0006')
+        self.assertEqual(new.identifier, 'AAA00065')
 
     def test_receive_many(self):
         patient = self.patient
         receive = Receive.objects.create(
             patient=patient)
-        self.assertEqual(receive.receive_identifier, 'AAA0001')
+        self.assertEqual(receive.receive_identifier, 'AAA00015')
         receive = Receive.objects.create(
             patient=patient)
-        self.assertEqual(receive.receive_identifier, 'AAA0002')
+        self.assertEqual(receive.receive_identifier, 'AAA00023')
         receive = Receive.objects.create(
             patient=patient)
-        self.assertEqual(receive.receive_identifier, 'AAA0003')
+        self.assertEqual(receive.receive_identifier, 'AAA00031')
         receive = Receive.objects.create(
             patient=patient)
-        self.assertEqual(receive.receive_identifier, 'AAA0004')
+        self.assertEqual(receive.receive_identifier, 'AAA00049')
         receive = Receive.objects.create(
             patient=patient)
-        self.assertEqual(receive.receive_identifier, 'AAA0005')
+        self.assertEqual(receive.receive_identifier, 'AAA00057')
         receive = Receive.objects.create(
             patient=patient)
-        self.assertEqual(receive.receive_identifier, 'AAA0006')
+        self.assertEqual(receive.receive_identifier, 'AAA00065')
 
     def test_receive_identifier_history(self):
         patient = self.patient

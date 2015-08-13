@@ -107,3 +107,6 @@ class TestReceive(TestCase):
             IdentifierHistory.objects.get(identifier=receive.receive_identifier),
             IdentifierHistory)
         self.assertEqual(receive.receive_identifier, receive_identifier)
+
+    def test_receive_status(self):
+        pass

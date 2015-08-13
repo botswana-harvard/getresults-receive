@@ -12,3 +12,10 @@ PROTOCOL = (
     ('bcpp', 'BHP066'),
     ('eit', 'BHP074'),
 )
+
+STATUS = (
+    ('pending_r', 'Pending Result'),
+    ('received', 'Received'),
+    ('resulted', 'Result Released'),
+    ('validate', 'Pending Validation'),
+)

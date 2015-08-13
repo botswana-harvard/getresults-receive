@@ -2,12 +2,12 @@
 
 {% block section_headers %}
     <!-- Button trigger modal -->
-    <a href="receive_sample.html" class="btn btn-primary btn-lg" data-toggle="modal-popover" data-target="#mysampleModal">
+    <button href="receive_sample.html" class="btn btn-primary btn-lg" data-toggle="modal-popover" data-target="#mysampleModal">
       Receive Sample  
-    </a>
-    <a type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#receivebatchModal">
+    </button>
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#receivebatchModal">
       Receive Batch  
-    </a>
+    </button>
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#">
       Receive And Order
     </button>
@@ -54,6 +54,7 @@
                     <label>
                       <input type="checkbox">
                     </label>
+                    </div>
                 </div>
               {% endfor %}
             <div class="modal-footer">
@@ -70,7 +71,7 @@
       </div>
     </div>
 
-{% endblock  %}
+{% endblock %}
 
 {% block content %}
     <h2 class="sub-header">{{section_head}}</h2>

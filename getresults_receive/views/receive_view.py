@@ -27,7 +27,7 @@ class ReceiveView(TemplateView):
                 'Receive Datetime',
                 'Sample Type',
                 'Protocol Number',
-                'Primary Aliquot?',],
+            ],
             labels={
                 'Add': 'Receive new samples',
                 'View': 'View Received samples',

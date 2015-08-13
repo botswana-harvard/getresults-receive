@@ -1,11 +1,57 @@
+{% extends "base.html" %}
 
-<form class="form-inline">
-	<div class="form-group">
-		<label for="patient_id">Patient Identifier</label>
-		<input type="text" class="form-control" id="patient_id">
-	</div>
-	<div class="form-group">
-		<label for="rec_datetime">Receive Datetime</label>
-		<input type="datetime" class="form-control" id="rec_datetime">
-	</div>
-</form>
+{% block content %}
+<!-- Modal -->
+<div id="mysampleModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- modal body -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Sample To Receive</h4>
+            </div>
+            <div class="modal-body">
+           
+            <form class="form" action="{% url 'receive_sample' %}" method="post">
+                  <div class="form-group">
+                    <label for="scan_code">Scan Code</label>
+                    <input type="scan_code" class="form-control" id="scan_code">
+                  </div>
+                  <div class="form-group">
+                    <label for="patient_id">Patient Identifier</label>
+                    <input type="text" class="form-control" id="patient_id">
+                  </div>
+                  <div class="form-group">
+                    <label for="collected_datetime">Collected Datetime</label>
+                    <input type="datetime" class="form-control" id="collected_datetime">
+                  </div>
+                  <div class="form-group">
+                    <label for="received_datetime">Received Datetime</label>
+                    <input type="datetime" class="form-control" id="received_datetime">
+                  </div>
+                  <div class="form-group">
+                    <label for="protocol_no">Protocol Number</label>
+                    <input type="text" class="form-control" id="protocol_no">
+                  </div>
+                  <div class="form-group">
+                    <label for="sample_type">Sample Type</label>
+                    <input type="text" class="form-control" id="sample_type">
+                  </div>
+                  <div class="form-group">
+                    <label for="clinician_initials">Clinician Initials</label>
+                    <input type="text" class="form-control" id="clinician_initials">
+                  </div>
+                      <div class="modal-footer">
+                        <div class="form-group">
+                            <button type="ok" class="btn btn-default">Ok</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%end block%}

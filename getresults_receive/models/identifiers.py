@@ -14,8 +14,10 @@ class BaseIdentifier(AlphanumericIdentifier):
 
     @property
     def last_identifier(self):
+        """Returns the last identifier created from the history model or None."""
         try:
-            identifier_history = self.history_model.objects.filter(identifier_type=self.identifier_type).latest('id')
+            identifier_history = self.history_model.objects.filter(
+                identifier_type=self.identifier_type).latest('id')
             last_identifier = identifier_history.identifier
         except self.history_model.DoesNotExist:
             last_identifier = None
@@ -25,8 +27,8 @@ class BaseIdentifier(AlphanumericIdentifier):
 class PatientIdentifier(BaseIdentifier):
 
     alpha_pattern = r'^[A-Z]{3}$'
-    numeric_pattern = r'^[0-9]{9}$'
-    seed = ('AAA', '000000000')
+    numeric_pattern = r'^[0-9]{8}$'
+    seed = ['AAA', '00000000']
     identifier_type = 'patient'
 
 
@@ -34,14 +36,6 @@ class ReceiveIdentifier(BaseIdentifier):
 
     identifier_type = 'receive'
 
-    @property
-    def alpha_pattern(self):
-        return settings.RECEIVE_IDENTIFIER_ALPHA_PATTERN
-
-    @property
-    def numeric_pattern(self):
-        return settings.RECEIVE_IDENTIFIER_NUMERIC_PATTERN
-
-    @property
-    def seed(self):
-        return settings.RECEIVE_IDENTIFIER_SEED
+    alpha_pattern = settings.RECEIVE_IDENTIFIER_ALPHA_PATTERN
+    numeric_pattern = settings.RECEIVE_IDENTIFIER_NUMERIC_PATTERN
+    seed = settings.RECEIVE_IDENTIFIER_SEED

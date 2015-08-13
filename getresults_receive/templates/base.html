@@ -61,8 +61,28 @@
           <ul class="nav nav-sidebar">
             <li class="active"><a href="#">{{sections_head}}<span class="sr-only">(current)</span></a></li>
               {% for section in sections %}
-              <li><a href="#">{{section}}</a></li>
-              {% endfor %}
+	            <li><a data-toggle="collapse" data-parent="#accordion" href="#collapse{{forloop.counter}}">{{section}}</a></li>
+	            <div id="collapse{{forloop.counter}}" class="panel-collapse collapse">
+	                <div align="center" class="panel-body"> 
+	                    {% if section == 'Order by Protocol' %}
+	                    	{% for choice in choices_procotol %}
+	                    		<a href="#">{{ choice }}</a></br>
+	                    	{% endfor %}
+	                    {% elif section == 'Order by Date Received' %}
+	                    	<input type="date" class="form-control" id="rcv_datetime">
+	                    {% elif section == 'Order by Sample Type' %}
+	                    	{% for sample in choices_samples%}
+	                    		<a href="#" align="left">{{sample}}</a></br>
+	                    	{% endfor %}
+	                    {% elif section == 'Received by User'%}
+	                    	<li>
+	                    		<a href="#">Logged In User</a><br>
+	                    	</li>
+	                    {% endif %}
+	                 </div> 
+	            </div>
+            {% endfor %}
+        </div>
           </ul>
         </div>
       {% endblock %}

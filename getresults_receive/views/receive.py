@@ -5,9 +5,14 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 
 
-def receive_sample(request):
+def receive_batch(request):
     patient = request.POST.get('patient_id')
     collect_datetime = request.POST.get('collect_datetime')
     print (patient)
-    template = 'receive.html'
-    return HttpResponseRedirect(reverse('receive'))
+    template = 'receive_batch.html'
+    return HttpResponseRedirect(reverse('receive_batch'))
+
+
+def receive_sample(request):
+    template = 'receive_sample.html'
+    return HttpResponseRedirect(reverse('receive_sample'))

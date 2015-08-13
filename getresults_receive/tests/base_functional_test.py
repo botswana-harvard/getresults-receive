@@ -3,11 +3,13 @@ import time
 from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from django.contrib.auth.models import User
 
 
 class BaseFunctionalTest(LiveServerTestCase):
 
     def setUp(self):
+        User.objects.create_superuser('rumplestiltskin', 'django@bhp.org.bw', 'sheepshanks')
         super().setUp()
         try:
             self.browser = webdriver.Chrome()
@@ -15,6 +17,7 @@ class BaseFunctionalTest(LiveServerTestCase):
             self.browser = webdriver.Firefox()
 
     def tearDown(self):
+        User.objects.all().delete()
         self.browser.quit()
 
     def login(self):

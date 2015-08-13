@@ -1,9 +1,10 @@
 import time
-import unittest
+
+from django.test import LiveServerTestCase
 from selenium import webdriver
 
 
-class BaseFunctionalBase(unittest.TestCase):
+class BaseFunctionalTest(LiveServerTestCase):
     server_url = 'http://localhost:8000/'
     browser = webdriver.Chrome()
 
@@ -12,7 +13,6 @@ class BaseFunctionalBase(unittest.TestCase):
         time.sleep(3)
 
     def tearDown(self):
-#         self.browser.get(self.server_url+"?testing=remove")
         self.browser.quit()
 
     def switch_to_new_window(self, text_in_element, element_id):

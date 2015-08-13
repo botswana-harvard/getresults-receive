@@ -1,16 +1,18 @@
 import time
 
+from django.contrib.auth.models import User
 from django.test import LiveServerTestCase
 from selenium import webdriver
 
 
 class BaseFunctionalTest(LiveServerTestCase):
-    server_url = 'http://localhost:8000/'
-    browser = webdriver.Chrome()
 
     def setUp(self):
-        self.browser.get(self.server_url)
-        time.sleep(3)
+        super().setUp()
+        try:
+            self.browser = webdriver.Chrome()
+        except AttributeError:
+            self.browser = webdriver.Firefox()
 
     def tearDown(self):
         self.browser.quit()

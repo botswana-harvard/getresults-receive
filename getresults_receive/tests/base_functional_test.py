@@ -1,8 +1,8 @@
 import time
 
-from django.contrib.auth.models import User
 from django.test import LiveServerTestCase
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 
 class BaseFunctionalTest(LiveServerTestCase):
@@ -16,6 +16,11 @@ class BaseFunctionalTest(LiveServerTestCase):
 
     def tearDown(self):
         self.browser.quit()
+
+    def login(self):
+        self.browser.get(self.live_server_url)
+        self.browser.find_element_by_id('username').send_keys('rumplestiltskin')
+        self.browser.find_element_by_id('password').send_keys('sheepshanks' + Keys.RETURN)
 
     def switch_to_new_window(self, text_in_element, element_id):
         retries = 60

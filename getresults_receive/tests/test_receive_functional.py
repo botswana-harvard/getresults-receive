@@ -16,3 +16,10 @@ class TestReceiveFunctional(BaseFunctionalTest):
         self.browser.find_element_by_id('login').click()
         time.sleep(1)
         self.assertIn('receive', self.browser.title.lower())
+
+    def test_batch_receive_pop(self):
+        self.login()
+        self.browser.get(self.live_server_url + '/receive')
+        self.browser.find_element_by_id('#receiveModal').click()
+        time.sleep(5)
+        self.switch_to_new_window('Receive', 'myModalLabel')

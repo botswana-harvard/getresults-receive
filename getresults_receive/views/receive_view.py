@@ -14,13 +14,12 @@ class ReceiveView(TemplateView):
         context = super().get_context_data(**kwargs)
         context.update(
             project_name=self.project_name(),
-            sections_head='Received',
+            sections_head='Receive',
             sections=self.sections(),
             title="Receive",
             header=['Patient Identifier', 'Receive Identifier', 'Collection Datetime', 'Receive Datetime', 'Sample Type', 'Protocol Number'],
             labels={'Add': 'Receive new samples', 'View': 'View Received samples', 'Remove': 'Remove received samples'},
             header_count=3,
-            range_to_receive=range(10),
             received=self.received(),
             received_count=self.received().count(),
         )

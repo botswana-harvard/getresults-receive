@@ -3,7 +3,6 @@ from django.utils import timezone
 
 from edc_base.model.models import BaseUuidModel, HistoricalRecords
 from ..choices import SAMPLE_TYPE, PROTOCOL, STATUS
-# from edc.base.model.fields import InitialsField
 from .identifiers import ReceiveIdentifier
 from .patient import Patient
 
@@ -39,11 +38,11 @@ class Receive(BaseUuidModel):
         max_length=6,
         choices=PROTOCOL)
 
-    status = models.CharField(
-        verbose_name='Status',
-        max_length=10,
-        choices=STATUS,
-    )
+#     status = models.CharField(
+#         verbose_name='Status',
+#         max_length=10,
+#         choices=STATUS,
+#     )
 
     history = HistoricalRecords()
 

@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-
+from datetime import datetime
 
 class TestProcessFunctional(LiveServerTestCase):
 
@@ -30,14 +30,17 @@ class TestProcessFunctional(LiveServerTestCase):
         userpwd = self.browser.find_element_by_name('password')
         userpwd.send_keys('123')
         userpwd.send_keys(Keys.RETURN)
-        patient = self.browser.find_elements_by_class_name('model-patient')
-        patient.click()
+        # Look for the patient link
+        patient_link = self.browser.find_elements_by_css_selector("a[href*='/admin/getresults_receive/patient/']")
+        for p in range(0, len(patient_link)):
+            link = self.browser.find_elements_by_css_selector("a[href*='/admin/getresults_receive/patient/']")
+            link[0].click()
         # Now nurse has to go to the Add Patient Button
         self.browser.find_element_by_link_text('Add patient').click()
         # There are several fields to key in
-        inputboxes = self.browser.find_element_by_tag_name('inputboxes')
-        self.assertIn('Patient identifier', inputboxes.text)
-        self.assertIn('Protocol', inputboxes.text)
+        inputboxes = self.browser.find_element_by_tag_name('body')
+        self.assertTrue('Patient identifier', inputboxes.text)
+        self.assertTrue('Protocol', inputboxes.text)
         self.assertIn('Registration datetime', inputboxes.text)
         self.assertIn('Gender', inputboxes.text)
         self.assertIn('Dob', inputboxes.text)
@@ -49,16 +52,20 @@ class TestProcessFunctional(LiveServerTestCase):
         protocol_no.send_keys('BHP065')
         acc = self.browser.find_element_by_name('account')
         acc.send_keys('BHP065')
-        reg_date = self.browser.find_elemet_by_name('registration_datetime')
-        reg_date.send_keys('2015/08/14 03:30')
-        gender = self.browser.find_element_by_css_selector("input[value='F']")
-        gender.click()
+        reg_date = self.browser.find_element_by_name('registration_datetime_0')
+        reg_date.send_keys('2015-08-14')
+        reg_time = self.browser.find_element_by_name('registration_datetime_1')
+        reg_time.send_keys('10:40:52')
+        gender = self.browser.find_element_by_id('id_gender')
+        if gender.text == 'Female':
+            gender.click()
         dob = self.browser.find_element_by_name('dob')
-        dob.send_keys('1995/08/14')
+        dob.send_keys('1995-08-14')
         omang_id = self.browser.find_element_by_name('identity')
         omang_id.send_keys('111121111')
         save_button = self.browser.find_element_by_css_selector("input[type='submit']")
         save_button.click()
         self.browser.close()
 
-        # still to write more. next step receive
+        # TO DO: still to write more. next step receive
+        # TO DO: split this quote into several methods

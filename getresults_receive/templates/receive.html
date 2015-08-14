@@ -1,75 +1,134 @@
 {% extends "base.html" %}
 
 {% block section_headers %}
-    <!-- Button trigger modal -->
-    <button href="receive_sample.html" class="btn btn-primary btn-lg" data-toggle="modal-popover" data-target="#mysampleModal">
+     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#sampleModal">
       Receive Sample  
-    </button>
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#receivebatchModal">
+    </button>  
+    <!-- Sample Modal-->
+    <div class="modal fade" id="sampleModal" tabindex="-1" role="dialog" aria-labelledby="sampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="sampleModalLabel">Receive Sample</h4>
+            </div>
+            <div class="modal-body">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label for="scan_code" class="control-label col-xs-2">Scan Code</label>
+                    <div class="col-xs-10">
+                    <input type="text" class="form-control" placeholder="scan your barcode here" id="scan_code">
+                    </div>
+              </div>
+              <div class="form-group">
+                <label for="patient_id" class="control-label col-xs-2">Patient Identifier</label>
+                    <div class="col-xs-10">
+                    <input type="text" class="form-control" id="patient_id">
+                    </div>
+              </div>
+              <div class="form-group">
+                <label for="collected_datetime" class="control-label col-xs-2">Collected Datetime</label>
+                    <div class="col-xs-10">
+                    <input type="datetime" class="form-control" id="collected_datetime">
+                    </div>
+              </div>
+              <div class="form-group">
+                <label for="received_datetime" class="control-label col-xs-2">Received Datetime</label>
+                    <div class="col-xs-10">
+                    <input type="datetime" class="form-control" id="received_datetime">
+                    </div>
+              </div>
+              <div class="form-group">
+                <label for="protocol_no" class="control-label col-xs-2">Protocol Number</label>
+                    <div class="col-xs-10">
+                    <input type="text" class="form-control" id="protocol_no">
+                    </div>
+              </div>
+              <div class="form-group">
+                <label for="sample_type" class="control-label col-xs-2">Sample Type</label>
+                    <div class="col-xs-10">
+                    <input type="text" class="form-control" id="sample_type">
+                    </div>
+              </div>
+              <div class="form-group">
+                <label for="clinician_initials" class="control-label col-xs-2">Clinician Initials</label>
+                    <div class="col-xs-10">
+                    <input type="text" class="form-control" id="clinician_initials">
+                    </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Receive</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              </div>
+          </form>
+          </div> <!--end samplemodal form-->
+                        
+           </div>
+        </div>
+    </div>
+ 
+ 
+    <!--Batch Button-->
+     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#batchModal">
       Receive Batch  
     </button>
+          
+    <!--Batch Modal -->
+    <div class="modal fade" id="batchModal" tabindex="-1" role="dialog" aria-labelledby="batchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="batchModalLabel">Receive Batch</h4>
+            </div>
+            
+            <div class="modal-body">
+            <form class="form-inline" enctype="multipart/form-data">
+                {% for range in range_to_receive %}
+                <div class="row form-inline">
+                    <div class="checkbox"></label><input type="checkbox"></div>
+                      <div class="form-group">
+                        <label for="patient_id"></label>
+                        <input type="text" class="form-control" id="patient_id" name="patient_id" placeholder="Patient Identifier">
+                      </div>
+                      <div class="form-group">
+                        <label for="collect_datetime"></label>
+                        <input type="datetime" class="form-control" id="collect_datetime" name="collect_datetime" placeholder="Colletion Datetime">
+                      </div>
+                      <div class="form-group">
+                        <label for="rec_datetime"></label>
+                        <input type="datetime" class="form-control" id="rec_datetime" name="rec_datetime" placeholder="Receive Datetime">
+                      </div>
+                      <div class="form-group">
+                        <label for="sample_type"></label>
+                        <input type="text" class="form-control" id="sample_type" name="sample_type" placeholder="Sample Type">
+                      </div>
+                      <div class="form-group">
+                        <label for="protocol_no"></label>
+                        <input type="text" class="form-control" id="protocol_no" name="protocol_no" placeholder="Protocol Number">
+                      </div>
+                      <div class="checkbox"></label><input type="checkbox"></div>
+              </div>
+              {% endfor %}
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" type="submit" value="submit" name="receive" id="receive">Receive</button>
+                <button type="button" class="btn btn-primary" type="submit" name="receive_all" id="receive_all">Receive All</button>
+                <button type="button" class="btn btn-primary" type="submit" name="remove" id="receive_all">Remove Selected</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+          </form>
+          </div> <!--end batchmodal form-->
+                        
+           </div>
+        </div>
+    </div>
+ 
+    
+    
+    <!--Order Button-->
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#">
       Receive And Order
     </button>
-    
-    <!-- Modal -->
-    <div class="modal fade" id="receivebatchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Receive Batch</h4>
-          </div>
-          <div class="modal-body">
-            <form class="form-inline" action="{% url 'receive' %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% for range in range_to_receive %}
-                <div class="row form-inline">
-                    <div class="checkbox">
-                    <label>
-                      <input type="checkbox">
-                    </label>
-                    </div>
-                    <div class="form-group">
-                        <label for="patient_id"></label>
-                        <input type="text" class="form-control" id="patient_id" name="patient_id" placeholder="Patient Identifier">
-                    </div>
-                    <div class="form-group">
-                        <label for="collect_datetime"></label>
-                        <input type="text" class="form-control" id="collect_datetime" name="collect_datetime" placeholder="Colletion Datetime">
-                    </div>
-                    <div class="form-group">
-                        <label for="rec_datetime"></label>
-                        <input type="text" class="form-control" id="rec_datetime" name="rec_datetime" placeholder="Receive Datetime">
-                    </div>
-                    <div class="form-group">
-                        <label for="sample_type"></label>
-                        <input type="text" class="form-control" id="sample_type" name="sample_type" placeholder="Sample Type">
-                    </div>
-                    <div class="form-group">
-                        <label for="protocol_no"></label>
-                        <input type="text" class="form-control" id="protocol_no" name="protocol_no" placeholder="Protocol Number">
-                    </div>
-                    <div class="checkbox">
-                    <label>
-                      <input type="checkbox">
-                    </label>
-                    </div>
-                </div>
-              {% endfor %}
-            <div class="modal-footer">
-                <div class="form-group">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" type="submit" value="submit" name="receive" id="receive">Receive</button>
-                    <button type="button" class="btn btn-primary" type="submit" name="receive_all" id="receive_all">Receive All</button>
-                    <button type="button" class="btn btn-primary" type="submit" name="remove" id="receive_all">Remove Selected</button>
-                </div>
-          </div>
-          </form>
-          </div>
-        </div>
-      </div>
-    </div>
 
 {% endblock %}
 

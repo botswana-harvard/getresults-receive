@@ -13,7 +13,7 @@ class ReceiveSampleView(TemplateView):
         context.update(
             project_name=self.project_name(),
             sections_head='Receive Sample',
-            title="Receive Sample", )
+            title="Receive Sample", ),
         return context
 
     def project_name(self):

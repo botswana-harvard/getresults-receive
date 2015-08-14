@@ -1,7 +1,6 @@
 from django.views.generic import TemplateView
 from django.conf import settings
 
-from ..choices import SAMPLE_TYPE, PROTOCOL
 from ..models import Receive
 
 
@@ -17,8 +16,6 @@ class ReceiveView(TemplateView):
             project_name=self.project_name(),
             sections_head='Receive',
             sections=self.sections(),
-            choices_procotol=self.choices_procotol(),
-            choices_samples=self.choices_samples(),
             title="Receive",
             header=[
                 'Patient Identifier',
@@ -34,28 +31,15 @@ class ReceiveView(TemplateView):
                 'View': 'View Received samples',
                 'Remove': 'Remove received samples'},
             header_count=3,
-            received=self.received(),
             range_to_receive=range(10),
-            received_count=self.received().count(),
-        )
+            received=self.received(),
+            received_count=self.received().count(), )
         return context
 
     def sections(self):
         """Override in to give a list of sections within the project"""
         return ['Order by Date Received', 'Order by Protocol',
                 'Order by Sample Type', 'Received by User', 'View All Received']
-
-    def choices_procotol(self):
-        choices_list = []
-        for item in PROTOCOL:
-            choices_list.append(item[1])
-        return choices_list
-
-    def choices_samples(self):
-        samples_list = []
-        for s in SAMPLE_TYPE:
-            samples_list.append(s[1])
-        return samples_list
 
     def project_name(self):
         if 'PROJECT_NAME' in dir(settings):

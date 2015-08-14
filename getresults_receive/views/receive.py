@@ -6,9 +6,6 @@ from django.core.urlresolvers import reverse
 
 
 def receive_batch(request):
-    patient = request.POST.get('patient_id')
-    collect_datetime = request.POST.get('collect_datetime')
-    print (patient)
     template = 'receive_batch.html'
     return HttpResponseRedirect(reverse('receive_batch'))
 

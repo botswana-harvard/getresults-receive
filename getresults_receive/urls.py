@@ -17,7 +17,7 @@ Including another URLconf
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
 
-from .views import DashboardView, user_login, ReceiveView, ReceiveSampleView, ReceiveBatchView
+from .views import DashboardView, user_login, ReceiveView
 
 
 admin.autodiscover()
@@ -28,6 +28,4 @@ urlpatterns = patterns(
     url(r'^$', user_login, name='login_url'),
     url(r'^dashboard/', DashboardView.as_view(), name='dashboard'),
     url(r'^receive/', ReceiveView.as_view(), name='receive'),
-#     url(r'^receive_batch/', ReceiveBatchView.as_view(), name='receive_batch'),
-#     url(r'^receive_sample/', ReceiveSampleView.as_view(), name='receive_sample'),
 )

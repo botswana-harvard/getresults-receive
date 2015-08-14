@@ -1,8 +1,8 @@
-#receiveModal .modal-dialog {
+#batchModal .modal-dialog {
 	width: 95%;
 	height: 85%;
 }
 
-#receiveModal .modal-body {
+#batchModal .modal-body {
 	margin-left: 20px;
 }

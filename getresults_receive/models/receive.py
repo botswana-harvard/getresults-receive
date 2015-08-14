@@ -1,8 +1,12 @@
+import uuid
+
 from django.db import models
 from django.utils import timezone
 
 from edc_base.model.models import BaseUuidModel, HistoricalRecords
-from ..choices import SAMPLE_TYPE, PROTOCOL, STATUS
+
+from ..choices import SAMPLE_TYPE, PROTOCOL
+
 from .identifiers import ReceiveIdentifier
 from .patient import Patient
 
@@ -38,11 +42,10 @@ class Receive(BaseUuidModel):
         max_length=6,
         choices=PROTOCOL)
 
-#     status = models.CharField(
-#         verbose_name='Status',
-#         max_length=10,
-#         choices=STATUS,
-#     )
+    batch_identifier = models.CharField(
+        max_length=25,
+        editable=False,
+    )
 
     history = HistoricalRecords()
 

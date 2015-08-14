@@ -17,7 +17,7 @@ Including another URLconf
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
 
-from .views import DashboardView, user_login, ReceiveView
+from .views import DashboardView, user_login, ReceiveView, show_batch
 
 
 admin.autodiscover()
@@ -28,4 +28,5 @@ urlpatterns = patterns(
     url(r'^$', user_login, name='login_url'),
     url(r'^dashboard/', DashboardView.as_view(), name='dashboard'),
     url(r'^receive/', ReceiveView.as_view(), name='receive'),
+    url(r'^batch/(?P<batch_identifier>[0-9A-Z\-]+)/', show_batch, name='batch'),
 )

@@ -23,7 +23,15 @@ class ReceiveView(TemplateView):
                 'Collection Datetime',
                 'Receive Datetime',
                 'Sample Type',
-                'Protocol Number', ],
+                'Protocol Number',
+                'Batch Identifier'
+            ],
+            labels={
+                'Add': 'Receive new samples',
+                'View': 'View Received samples',
+                'Remove': 'Remove received samples'},
+            header_count=3,
+            range_to_receive=range(10),
             received=self.received(),
             received_count=self.received().count(), )
         return context

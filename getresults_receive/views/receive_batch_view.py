@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 from django.conf import settings
 
-from ..models import Receive
+from ..choices import SAMPLE_TYPE, PROTOCOL
 
 
 class ReceiveBatchView(TemplateView):
@@ -14,15 +14,11 @@ class ReceiveBatchView(TemplateView):
         context = super().get_context_data(**kwargs)
         context.update(
             project_name=self.project_name(),
+            choices_procotol=self.choices_procotol(),
+            choices_samples=self.choices_samples(),
             sections_head='Receive Batch',
             title="Receive Batch",
-            # header=['Patient Identifier', 'Receive Identifier', 'Collection Datetime', 'Receive Datetime', 'Sample Type', 'Protocol Number'],
-            # labels={'Add': 'Receive new samples', 'View': 'View Received samples', 'Remove': 'Remove received samples'},
-            # header_count=3,
-            batch_range_to_receive=range(10),
-            # received=self.received(),
-            # received_count=self.received().count(),
-        )
+            range_to_receive=range(10), )
         return context
 
     def project_name(self):
@@ -31,5 +27,14 @@ class ReceiveBatchView(TemplateView):
         else:
             return ''
 
-#     def received(self):
-#         return Receive.objects.filter()
+    def choices_procotol(self):
+        choices_list = []
+        for item in PROTOCOL:
+            choices_list.append(item[1])
+        return choices_list
+
+    def choices_samples(self):
+        samples_list = []
+        for s in SAMPLE_TYPE:
+            samples_list.append(s[1])
+        return samples_list

@@ -99,6 +99,7 @@
 						<input type="text" class="form-control" id="protocol_number_input" name="protocol_number" placeholder="Protocol Number">
 					</div>
 			  	</div>
+			  	<div id="dynamic_fields">
                 {% for range in range_to_receive %}
 	                <div class="row form-inline" id="row_inline_2">
 	                    <div class="checkbox"></label><input type="checkbox"></div>
@@ -125,6 +126,7 @@
 	                      <div class="checkbox"></label><input type="checkbox"></div>
 	              </div>
               {% endfor %}
+              </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary" type="submit" value="submit" name="receive" id="receive">Receive</button>
                 <button type="button" class="btn btn-primary" type="submit" name="receive_all" id="receive_all">Receive All</button>
@@ -182,13 +184,14 @@
 			
 			$("#number_samples_input").keyup(function (){
 				var value = $(this).val();
-				var form_element_div = $('#row_inline_2');
+				var form_element_div = $('#dynamic_fields');
 				var append_html= '<div class="checkbox"><label><input type="checkbox">\
 				    </label><div class="form-group"><label for="patient_id"></label><input type="text" class="form-control" id="patient_id" name="patient_id" placeholder="Patient Identifier">\
 					</div><div class="form-group"><label for="collect_datetime"></label><input type="text" class="form-control" id="collect_datetime" name="collect_datetime" placeholder="Colletion Datetime">\
 					</div><div class="form-group"><label for="rec_datetime"></label><input type="text" class="form-control" id="rec_datetime" name="rec_datetime" placeholder="Receive Datetime">\
 					</div><div class="form-group"><label for="sample_type"></label><input type="text" class="form-control" id="sample_type" name="sample_type" placeholder="Sample Type"></div>\
-                    <div class="form-group"><label for="protocol_no"></label><input type="text" class="form-control" id="protocol_no" name="protocol_no" placeholder="Protocol Number"></div>';
+                    <div class="form-group"><label for="protocol_no"></label><input type="text" class="form-control" id="protocol_no" name="protocol_no" placeholder="Protocol Number"></div>\
+                    <div class="checkbox"></label><input type="checkbox"></div>';
                 form_element_div.children().remove();
                 form_element_div.append(append_html);
 				for (i = 0; i < value - 1; i++) {
@@ -196,7 +199,7 @@
 					//	return;
 					//}
 				    form_element_div.append(append_html);
-				    form_element_div = $('#row_inline_2');
+				    form_element_div = $('#dynamic_fields');
 				}    
 			});
 		});

@@ -8,7 +8,9 @@ from .base_functional_test import BaseFunctionalTest
 class TestReceiveFunctional(BaseFunctionalTest):
 
     def test_login(self):
-        # Only authorized users can access the system
+        """
+        Only authorized users can access the system
+        """
         self.assertEquals(User.objects.all().count(), 1)
         self.browser.get(self.live_server_url)
         self.browser.find_element_by_id('username').send_keys('rumplestiltskin')
@@ -23,3 +25,7 @@ class TestReceiveFunctional(BaseFunctionalTest):
         self.browser.find_element_by_id('batchbutton').click()
         time.sleep(1)
         self.switch_to_new_window('Receive', 'batchModalLabel')
+
+    def test_batch_view(self):
+        self.login()
+        self.browser.get(self.live_server_url + '/receive')

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h2 class="sub-header">{{section_head}}</h2>
+    <div class="table-responsive">
+      <table class="table table-striped">
+      <tr>
+        {% for head in header %}
+            <th>{{head}}</th>
+        {% endfor %}
+      </tr>
+      {% for batch in batch_received %}
+        <tr>
+          <td>{{batch.batch_identifier}}</td>
+          <td>{{batch.patient}}</td>
+          <td>{{batch.receive_identifier}}</td>
+          <td>{{batch.receive_datetime}}</td>
+          <td>{{batch.collection_datetime}}</td>
+          <td>{{batch.sample_type}}</td>
+          <td>{{batch.protocol_number}}</td>
+        </tr>
+      {% endfor %}
+      </table>
+    </div>
+{% endblock %}

@@ -27,6 +27,7 @@ class ReceiveView(TemplateView):
                 'Receive Datetime',
                 'Sample Type',
                 'Protocol Number',
+                'Batch Identifier'
             ],
             labels={
                 'Add': 'Receive new samples',

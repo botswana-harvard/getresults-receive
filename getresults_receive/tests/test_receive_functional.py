@@ -20,6 +20,6 @@ class TestReceiveFunctional(BaseFunctionalTest):
     def test_batch_receive_pop(self):
         self.login()
         self.browser.get(self.live_server_url + '/receive')
-        self.browser.find_element_by_id('#receivebatchModal').click()
+        self.browser.find_element_by_id('batchbutton').click()
         time.sleep(1)
-        self.switch_to_new_window('Receive', 'myModalLabel')
+        self.switch_to_new_window('Receive', 'batchModalLabel')

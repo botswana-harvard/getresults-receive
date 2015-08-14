@@ -9,8 +9,8 @@ from django.contrib.auth.models import User
 class BaseFunctionalTest(LiveServerTestCase):
 
     def setUp(self):
-        User.objects.create_superuser('rumplestiltskin', 'django@bhp.org.bw', 'sheepshanks')
         super().setUp()
+        User.objects.create_superuser('rumplestiltskin', 'django@bhp.org.bw', 'sheepshanks')
         try:
             self.browser = webdriver.Chrome()
         except AttributeError:

@@ -16,9 +16,9 @@ class BaseSeleniumTest(StaticLiveServerTestCase):
         User.objects.create_superuser(self.username, self.email, self.password)
         super().setUp()
         try:
-            self.browser = webdriver.Chrome()
-        except AttributeError:
             self.browser = webdriver.Firefox()
+        except AttributeError:
+            self.browser = webdriver.PhantomJS()
         self.browser.get(self.live_server_url)
 
     def tearDown(self):

@@ -1,1 +1,0 @@
-from .choices import SAMPLE_TYPE, PROTOCOL

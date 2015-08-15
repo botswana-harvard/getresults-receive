@@ -23,7 +23,9 @@ class DashboardView(TemplateView):
             sections_head='Received',
             sections=self.sections(),
             title="Receive",
-            header=['Receive', 'Patient Identifier', 'Receive Identifier', 'Collection Datetime', 'Receive Datetime', 'Sample Type', 'Protocol Number'],
+            header=[
+                'Receive', 'Patient Identifier', 'Receive Identifier',
+                'Collection Datetime', 'Receive Datetime', 'Sample Type', 'Protocol Number'],
             header_count=3,
             received=self.received(),
             received_count=self.received().count(),

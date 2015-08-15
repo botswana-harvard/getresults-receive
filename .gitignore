@@ -10,7 +10,7 @@ db.sqlite3
 etc/*
 # C extensions
 *.so
-
+getresults_receive/.DS_Store
 # Distribution / packaging
 .Python
 env/

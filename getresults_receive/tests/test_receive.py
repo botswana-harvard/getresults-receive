@@ -9,50 +9,29 @@ from .factories import ReceiveFactory
 
 class TestReceive(TestCase):
 
-    @property
-    def patient(self):
+    def setUp(self):
         patient_identifier = 'P12345678'
-        return Patient.objects.create(
+        self.patient = Patient.objects.create(
             patient_identifier=patient_identifier,
-            registration_datetime=timezone.now())
+            registration_datetime=timezone.now()
+        )
 
     def test_create(self):
         self.assertIsInstance(Receive.objects.create(
             patient=self.patient), Receive)
 
-    def test_create_identifier(self):
+    def test_creates_identifier(self):
         receive = Receive.objects.create(
             patient=self.patient)
         self.assertEqual(receive.receive_identifier, 'AAA00015')
 
-    def test_update_identifier_history_thru_model(self):
+    def test_updates_identifier_history_thru_model(self):
         receive = Receive.objects.create(
             patient=self.patient)
         self.assertEqual(receive.receive_identifier, 'AAA00015')
         self.assertEqual(
             IdentifierHistory.objects.get(identifier=receive.receive_identifier).identifier,
             receive.receive_identifier)
-
-    def test_update_identifier_history(self):
-        receive_identifier = ReceiveIdentifier()
-        self.assertEqual(
-            IdentifierHistory.objects.get(identifier=receive_identifier.identifier).identifier,
-            receive_identifier.identifier)
-
-    def test_increment_identifier(self):
-        receive = Receive.objects.create(
-            patient=self.patient)
-        self.assertEqual(receive.receive_identifier, 'AAA00015')
-        new = ReceiveIdentifier()
-        self.assertEqual(new.identifier, 'AAA00023')
-        new = ReceiveIdentifier()
-        self.assertEqual(new.identifier, 'AAA00031')
-        new = ReceiveIdentifier()
-        self.assertEqual(new.identifier, 'AAA00049')
-        new = ReceiveIdentifier()
-        self.assertEqual(new.identifier, 'AAA00057')
-        new = ReceiveIdentifier()
-        self.assertEqual(new.identifier, 'AAA00065')
 
     def test_receive_many(self):
         patient = self.patient

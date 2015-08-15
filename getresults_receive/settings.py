@@ -14,7 +14,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 from unipath import Path
 
-PROJECT_NAME = 'LIMS RECEIVE'
+PROJECT_NAME = 'Getresults'
 
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
@@ -26,7 +26,7 @@ BASE_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 SECRET_KEY = 'w^k+nty=&d-)qvc^mn_eo&c7-*^v7-e)f_kk&gbrpiv-d)6x(4'
 
 # KEY PATH
-KEY_PATH = '/Users/fchilisa/source/getresults-receive/getresults_receive'
+KEY_PATH = BASE_DIR
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,8 +44,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_crypto_fields',
-    'getresults',
-    'getresults_aliquot',
     'getresults_receive',
 )
 
@@ -120,9 +118,3 @@ STATICFILES_FINDERS = (
 )
 
 GIT_DIR = BASE_DIR.ancestor(1)
-
-RECEIVE_IDENTIFIER_SEED = ['AAA', '0000']
-RECEIVE_IDENTIFIER_ALPHA_PATTERN = r'^[A-Z]{3}$'
-RECEIVE_IDENTIFIER_NUMERIC_PATTERN = r'^[0-9]{4}$'
-
-ALIQUOT_IDENTIFIER_PREFIX_PATTERN = RECEIVE_IDENTIFIER_ALPHA_PATTERN[:-1] + RECEIVE_IDENTIFIER_ALPHA_PATTERN[1:]

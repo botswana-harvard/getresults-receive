@@ -1,30 +1,51 @@
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from django.conf import settings
 
 from ..models import Receive
 
 
+class Option(object):
+
+    def __init__(self, link_text, href, data_toggle, data_target):
+        self.link_text = link_text
+        self.href = href
+        self.data_toggle = data_toggle
+        self.data_target = data_target
+        self.name = self.link_text.lower().replace(' ', '_')
+
+
 class ReceiveView(TemplateView):
+
     template_name = 'receive.html'
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ReceiveView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update(
-            project_name=self.project_name(),
-            sections_head='Receive',
-            sections=self.sections(),
-            title="Receive",
+            project_name='GETRESULTS: RECEIVE',
+            section_name="RECEIVE",
+            title='GETRESULTS RECEIVE',
+            sidebar_options=[
+                Option('Receive by batch', None, 'modal', '#batchModal'),
+                Option('Receive single', None, 'modal', '#sampleModal'),
+                Option('View my batches', '#', None, None),
+                Option('View all batches', '#', None, None),
+                Option('Search for batch', '#', None, None),
+                Option('Search for specimen', '#', None, None),
+            ],
             header=[
-                'Patient Identifier',
-                'Receive Identifier',
-                'Collection Datetime',
-                'Receive Datetime',
-                'Sample Type',
-                'Protocol Number',
-                'Batch Identifier'
+                'Identifier',
+                'Patient',
+                'Collected',
+                'Received',
+                'Type',
+                'Protocol',
+                'Batch'
             ],
             labels={
                 'Add': 'Receive new samples',
@@ -32,20 +53,7 @@ class ReceiveView(TemplateView):
                 'Remove': 'Remove received samples'},
             header_count=3,
             range_to_receive=range(10),
-            received=self.received(),
-            received_count=self.received().count(), )
+            received=Receive.objects.all(),
+            received_count=Receive.objects.all().count()
+        )
         return context
-
-    def sections(self):
-        """Override in to give a list of sections within the project"""
-        return ['Order by Date Received', 'Order by Protocol',
-                'Order by Sample Type', 'Received by User', 'View All Received']
-
-    def project_name(self):
-        if 'PROJECT_NAME' in dir(settings):
-            return settings.PROJECT_NAME
-        else:
-            return ''
-
-    def received(self):
-        return Receive.objects.all()

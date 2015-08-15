@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+{% extends "base_dashboard.html" %}
 
 {% block section_headers %}
-     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#sampleModal">
+     <button name="receive_sample" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#sampleModal">
       Receive Sample  
     </button>  
     <!-- Sample Modal-->
@@ -69,7 +69,7 @@
  
  
     <!--Batch Button-->
-     <button type="button" class="btn btn-primary btn-lg" id="receive_batch_button" data-toggle="modal" data-target="#batchModal">
+     <button name="receive_batch" type="button" class="btn btn-primary btn-sm" id="receive_batch_button" data-toggle="modal" data-target="#batchModal">
       Receive Batch  
     </button>
           

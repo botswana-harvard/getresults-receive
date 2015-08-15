@@ -1,5 +1,3 @@
-import uuid
-
 from django.db import models
 from django.utils import timezone
 
@@ -44,6 +42,8 @@ class Receive(BaseUuidModel):
 
     batch_identifier = models.CharField(
         max_length=25,
+        null=True,
+        blank=True,
         editable=False,
     )
 

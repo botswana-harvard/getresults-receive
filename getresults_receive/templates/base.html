@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-{% block header %}
 <html lang="en">
+{% block header %}
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,7 +27,7 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-   {% block scripts %}
+{% block scripts %}
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -40,9 +40,13 @@
     <script src="../../static/js/jquery.form.js"></script>
     <script src="../../static/js/modal.js"></script>
   </body>
-  {% endblock %}
-{% endblock %}
-  <body>
+{% endblock scripts %}
+{% endblock header %}
+
+{% block body %}
+<body>
+
+{% block topbar %}
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -56,56 +60,31 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Help</a></li>
+            <li><a title="home" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
+            <li><a title="receive" href="/receive">RECEIVE</a></li>
+            <li><a title="order" href="/order">ORDER</a></li>
+            <li><a title="result" href="/order">RESULT</a></li>
+            <li><a title="storage" href="/order">STORE</a></li>
+            <li><a title="settings" href="/admin/"><span class="glyphicon glyphicon-wrench"></span></a></li>
+            <li><a title="user profile" href="/user_profile/">{{ user.username }}</a></li>
+            <li><a title="logout" href="/logout/"><span class="glyphicon glyphicon-log-out"></span></a></li>
           </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
         </div>
       </div>
     </nav>
+{% endblock topbar %}
 
-    <div class="container-fluid">
-      <div class="row">
-      {% block sidebar %}
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">{{sections_head}}<span class="sr-only">(current)</span></a></li>
-              {% for section in sections %}
-	            <li><a data-toggle="collapse" data-parent="#accordion" href="#collapse{{forloop.counter}}">{{section}}</a></li>
-	            <div id="collapse{{forloop.counter}}" class="panel-collapse collapse">
-	                <div align="center" class="panel-body"> 
-	                    {% if section == 'Order by Protocol' %}
-	                    	{% for choice in choices_procotol %}
-	                    		<a href="#">{{ choice }}</a></br>
-	                    	{% endfor %}
-	                    {% elif section == 'Order by Date Received' %}
-	                    	<input type="date" class="form-control" id="rcv_datetime">
-	                    {% elif section == 'Order by Sample Type' %}
-	                    	{% for sample in choices_samples%}
-	                    		<a href="#" align="left">{{sample}}</a></br>
-	                    	{% endfor %}
-	                    {% elif section == 'Received by User'%}
-	                    	<li>
-	                    		<a href="#">Logged In User</a><br>
-	                    	</li>
-	                    {% endif %}
-	                 </div> 
-	            </div>
-            {% endfor %}
-        </div>
-          </ul>
-        </div>
-      {% endblock %}
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">{{title}}</h1>
-        {% block section_headers%}{% endblock %}
-		{% block content %}{% endblock %}
-        </div>
-      </div>
-    </div>
-    
+{% block main %}
+<!--  all below the top bar and above the footer -->
+{% endblock main %}
+
+{% block bottombar %}
+<nav class="navbar navbar-inverse navbar-fixed-bottom">
+<div class="container-fluid">
+<a class="footer" href="#">For research purposes only</a>
+</div>
+</nav>
+{% endblock bottombar %}
+
+{% endblock body %}    
 </html>

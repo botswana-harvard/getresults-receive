@@ -4,7 +4,7 @@ from django.db import IntegrityError
 
 from getresults_patient.models import Patient
 from getresults_receive.models import Receive
-from getresults.models import IdentifierHistory
+from getresults_identifier.models import IdentifierHistory
 
 
 class TestReceive(TestCase):

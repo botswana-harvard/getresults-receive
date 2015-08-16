@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/botswana-harvard/getresults-receive.svg?branch=develop)](https://travis-ci.org/botswana-harvard/getresults-receive)
 
+[![Coverage Status](https://coveralls.io/repos/botswana-harvard/getresults-receive/badge.svg?branch=develop&service=github)](https://coveralls.io/github/botswana-harvard/getresults-receive?branch=develop)
+
 # getresults-receive
 
 The `Receive` model automatically allocates a unique receiving identifier for a new specimen.

@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/botswana-harvard/getresults-receive.svg?branch=develop)](https://travis-ci.org/botswana-harvard/getresults-receive)
+
 # getresults-receive
 
 The `Receive` model automatically allocates a unique receiving identifier for a new specimen.

@@ -14,24 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
 
-from django.conf.urls import include, url, patterns
+from django.conf.urls import include, url
 from django.contrib import admin
+from getresults.admin import admin_site
+from getresults import urls as getresults_urls
 
-from getresults_receive.admin import admin_site
-from .views import DashboardView, login_view, logout_view, ReceiveView, show_batch
-
+from .views import DashboardView, ReceiveView, show_batch
 
 admin.autodiscover()
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^admin/', include(admin_site.urls)),
-    url(r'^accounts/login/', login_view, name='login_url'),
-    url(r'^login/', login_view, name='login_url'),
-    url(r'^logout/', logout_view, name='logout_url'),
-    url(r'^home/', ReceiveView.as_view(), name='home'),
     url(r'^receive/', ReceiveView.as_view(), name='receive'),
     url(r'^batch/(?P<batch_identifier>[0-9A-Z\-]+)/', show_batch, name='batch'),
     url(r'^dashboard/', DashboardView.as_view(), name='dashboard'),
-    url(r'^$', login_view, name='login_url'),
-)
+    url(r'', include(getresults_urls)),
+]

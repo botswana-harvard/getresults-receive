@@ -2,7 +2,9 @@ from django.test.testcases import TestCase
 from django.utils import timezone
 from django.db import IntegrityError
 
-from getresults_receive.models import Receive, Patient, IdentifierHistory
+from getresults_patient.models import Patient
+from getresults_receive.models import Receive
+from getresults.models import IdentifierHistory
 
 
 class TestReceive(TestCase):

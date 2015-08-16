@@ -25,9 +25,6 @@ BASE_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'w^k+nty=&d-)qvc^mn_eo&c7-*^v7-e)f_kk&gbrpiv-d)6x(4'
 
-# KEY PATH
-KEY_PATH = BASE_DIR
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -44,6 +41,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_crypto_fields',
+    'getresults',
+    'getresults_patient',
     'getresults_receive',
 )
 

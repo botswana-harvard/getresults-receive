@@ -2,11 +2,11 @@ from django.db import models
 from django.utils import timezone
 
 from edc_base.model.models import BaseUuidModel, HistoricalRecords
+from getresults_patient.models import Patient
 
-from ..choices import SAMPLE_TYPE, PROTOCOL
+from ..choices import PROTOCOL
 
 from .identifiers import ReceiveIdentifier
-from .patient import Patient
 
 
 class Receive(BaseUuidModel):
@@ -28,12 +28,6 @@ class Receive(BaseUuidModel):
         verbose_name='Clinician initials',
         max_length=2,
         default='--', )
-
-    sample_type = models.CharField(
-        verbose_name='Sample Type',
-        max_length=25,
-        choices=SAMPLE_TYPE,
-        default='WB')
 
     protocol_number = models.CharField(
         verbose_name='Protocol Number',

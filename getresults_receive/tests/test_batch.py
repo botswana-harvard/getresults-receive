@@ -8,7 +8,11 @@ from ..utils import BatchHelper
 from ..models import Batch, BatchItem
      
 class TestBatch(TestCase):
-    
+
+    def tearDown(self):
+        Batch.objects.all().delete()
+        BatchItem.objects.all().delete()
+
     def test_create_batch(self):
         """Test that a batch identifier is assigned when batch created"""
         batch = Batch.objects.create()
@@ -41,7 +45,7 @@ class TestBatch(TestCase):
         items = []
         items.append(BatchItem(batch=batch, patient=patient))
         items.append(BatchItem(batch=batch, patient=patient))
-        items.append(BatchItem(batch=batch))
+        items.append(BatchItem())
         self.assertEqual(BatchItem.objects.all().count(), 0)
         BatchHelper().batchitem_transaction(items)
-        self.assertEqual(BatchItem.objects.all().count(), 3)
+        self.assertEqual(BatchItem.objects.all().count(), 0)

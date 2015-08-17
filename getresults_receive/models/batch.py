@@ -32,6 +32,5 @@ class Batch(BaseUuidModel):
             self.batch_identifier = BatchIdentifier().identifier
         super().save(*args, **kwargs)
 
-
     class Meta:
         app_label = "getresults_receive"

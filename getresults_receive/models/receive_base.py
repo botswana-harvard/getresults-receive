@@ -21,6 +21,5 @@ class ReceiveBase(BaseUuidModel):
         max_length=2,
         default='--', )
 
-
     class Meta:
         abstract = True

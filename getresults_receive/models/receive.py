@@ -20,7 +20,7 @@ class Receive(ReceiveBase):
         blank=True,
         editable=False,
     )
-    
+
     protocol_number = models.CharField(
         verbose_name='Protocol Number',
         max_length=6,

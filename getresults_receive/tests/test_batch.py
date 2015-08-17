@@ -17,10 +17,5 @@ class TestBatch(TestCase):
         batch = Batch.objects.create()
         batch_id = batch.batch_identifier
         batch.save()
-        self.assertEqual(batch_id, batch.batch_identifier)
-
-    def test_batch_creates_items(self):
-        batch = Batch.objects.create()
-        batch_item = BatchItem.objects.filter(batch_idenitifier=batch.batch_identifier)
-        self.assertIsNotNone(batch_item)
+        self.assertEqual(batch_id, batch.batch_identifier) 
     

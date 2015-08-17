@@ -37,7 +37,7 @@ class BatchPresetView(TemplateView):
                            sample_type_name=sample_type,
                            protocol_no_name=protocol_no,
                            site_code_name=site_code,
-                           batch_size=range(1, item_count)
+                           batch_size=range(0, item_count)
                            )
         return self.render_to_response(context)
 
@@ -46,6 +46,6 @@ class BatchPresetView(TemplateView):
         context.update(
             sections_head='Receive Batch',
             title="Receive Batch",
-            batch_size=range(1, 5),
+            batch_size=range(0, 5),
         )
         return context

@@ -1,9 +1,9 @@
 from django.forms import ModelForm
-from ..models import BatchItems
+from ..models import BatchItem
 
 
 class BatchItemForm(ModelForm):
 
     class Meta:
-        model = BatchItems
+        model = BatchItem
         fields = ['batch']

@@ -7,6 +7,10 @@ from .receive_base import ReceiveBase
 
 
 class Receive(ReceiveBase):
+    receive_identifier = models.CharField(
+        max_length=25,
+        editable=False,
+        unique=True, )
 
     batch_identifier = models.CharField(
         max_length=25,

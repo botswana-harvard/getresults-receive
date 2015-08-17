@@ -10,11 +10,6 @@ from ..choices import PROTOCOL
 
 class ReceiveBase(BaseUuidModel):
 
-    receive_identifier = models.CharField(
-        max_length=25,
-        editable=False,
-        unique=True, )
-
     receive_datetime = models.DateTimeField(
         default=timezone.now)
 

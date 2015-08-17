@@ -16,7 +16,16 @@ class Batch(BaseUuidModel):
 
     status = models.CharField(
         max_length=10,
+        default='Open',
     )
+
+    sample_type = models.CharField(
+        max_length=2,
+    )
+
+    protocol_number = models.CharField(max_length=5, null=True, blank=True)
+
+    site_code = models.CharField(max_length=2, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -24,4 +33,4 @@ class Batch(BaseUuidModel):
         super().save(*args, **kwargs)
 
     class Meta:
-        app_label = "batch"
+        app_label = "getresults_receive"

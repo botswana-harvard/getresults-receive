@@ -19,12 +19,12 @@ class BatchPresetView(TemplateView):
         super().__init__(**kwargs)
 
     def get(self, request):
-        #form = self.form_class(initial=self.initial)
+        # form = self.form_class(initial=self.initial)
         context = self.get_context_data()
         return self.render_to_response(context)
 
     def post(self, request):
-        #form = self.form_class(initial=self.initial)
+        # form = self.form_class(initial=self.initial)
         context = self.get_context_data()
         form = BatchForm(request.POST)
         if form.is_valid():

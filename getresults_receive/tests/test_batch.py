@@ -1,11 +1,21 @@
 from django.test.testcases import TestCase
+from django.utils import timezone
 from datetime import datetime
+
+# from edc_base.model.models import BaseUuidModel
+
+from getresults_patient.models import Patient
 
 from ..utils import BatchHelper
 
 from ..models import Batch, BatchItem
 
+# class Patient(BaseUuidModel):
+# 
+#     class Meta:
+#         app_label = 'getresults_receive'
 
+      
 class TestBatch(TestCase):
     
     def test_create_batch(self):
@@ -21,16 +31,17 @@ class TestBatch(TestCase):
         batch.save()
         self.assertEqual(batch_id, batch.batch_identifier) 
     
-#     def test_batchitem_save(self):
-#         """Test that transaction persists change if no fail"""
-#         batch = Batch.objects.create(item_count=3, sample_type='WB')
-#         items = []
-#         items.append(BatchItem(batch=batch), )
-#         items.append(BatchItem(batch=batch))
-#         items.append(BatchItem(batch=batch))
-#         self.assertEqual(BatchItem.objects.all().count(), 0)
-#         BatchHelper().batchitem_transaction(items)
-#         self.assertEqual(BatchItem.objects.all().count(), 3)
+    def test_batchitem_save(self):
+        """Test that transaction persists change if no fail"""
+        batch = Batch.objects.create(item_count=3, sample_type='WB')
+        patient = Patient.objects.create(registration_datetime=datetime.now())
+        items = []
+        items.append(BatchItem(batch=batch, patient=patient))
+        items.append(BatchItem(batch=batch, patient=patient))
+        items.append(BatchItem(batch=batch, patient=patient))
+        self.assertEqual(BatchItem.objects.all().count(), 0)
+        BatchHelper().batchitem_transaction(items)
+        self.assertEqual(BatchItem.objects.all().count(), 3)
     
 #     def test_batchitem_rollback(self):
 #         """Test that transaction rolls back when one item fails"""

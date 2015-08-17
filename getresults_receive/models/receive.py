@@ -5,6 +5,8 @@ from edc_base.model.models import HistoricalRecords
 from .identifiers import ReceiveIdentifier
 from .receive_base import ReceiveBase
 
+from ..choices import PROTOCOL
+
 
 class Receive(ReceiveBase):
     receive_identifier = models.CharField(
@@ -18,6 +20,11 @@ class Receive(ReceiveBase):
         blank=True,
         editable=False,
     )
+    
+    protocol_number = models.CharField(
+        verbose_name='Protocol Number',
+        max_length=6,
+        choices=PROTOCOL)
 
     history = HistoricalRecords()
 

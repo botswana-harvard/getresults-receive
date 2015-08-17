@@ -6,3 +6,4 @@ class BatchItemForm(ModelForm):
 
     class Meta:
         model = BatchItems
+        fields = ['batch']

@@ -18,10 +18,19 @@ class Batch(BaseUuidModel):
         max_length=10,
     )
 
+    sample_type = models.CharField(
+        max_length=2,
+    )
+
+    protocol_numer = models.CharField(max_length=5, required=False)
+
+    site_code = models.CharField(max_length=2, required=False)
+
     def save(self, *args, **kwargs):
         if not self.id:
             self.batch_identifier = BatchIdentifier().identifier
         super().save(*args, **kwargs)
 
+
     class Meta:
-        app_label = "batch"
+        app_label = "getresults_receive"

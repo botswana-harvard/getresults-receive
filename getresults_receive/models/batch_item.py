@@ -3,11 +3,12 @@ from django.db import models
 from edc_base.model.models import BaseUuidModel
 
 from .batch import Batch
+from .receive_base import ReceiveBase
 
 
-class BatchItems(BaseUuidModel):
+class BatchItem(ReceiveBase):
 
     batch = models.ForeignKey(Batch)
 
     class Meta:
-        app_label = "batch_items"
+        app_label = "getresults_receive"

@@ -6,11 +6,11 @@ from ..models import Receive
 def show_batch(request, **kwargs):
     batch = Receive.objects.filter(batch_identifier=kwargs.get('batch_identifier'))
     kwargs['batch_received'] = batch
-    return BatchView.as_view()(request, **kwargs)
+    return BatchPresetView.as_view()(request, **kwargs)
 
 
-class BatchView(TemplateView):
-    template_name = 'batch.html'
+class BatchPresetView(TemplateView):
+    template_name = 'reveive.html'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

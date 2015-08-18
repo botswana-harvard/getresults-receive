@@ -1,14 +1,13 @@
-from datetime import datetime
+from datetime import datetime, date
 
 from django.test.testcases import TransactionTestCase
 from django.utils import timezone
 
 from getresults_patient.models import Patient
 
-from ..models import Batch, BatchItem
-
 from ..batch_helper import BatchError, BatchHelper
-from django.views.generic.dates import timezone_today
+
+from ..models import Batch, BatchItem, Receive
 
 
 class TestBatch(TransactionTestCase):
@@ -49,7 +48,6 @@ class TestBatch(TransactionTestCase):
         items = []
         for _ in range(3):
             batch_item = BatchItem(
-                batch=batch,
             )
             items.append(batch_item)
         self.assertEqual(BatchItem.objects.all().count(), 0)
@@ -57,7 +55,52 @@ class TestBatch(TransactionTestCase):
         self.assertRaises(BatchError, batch_helper.add, items)
         self.assertEqual(BatchItem.objects.all().count(), 0)
 
-    def test_batchitem_save_ok(self):
+    def test_receive_save_ok(self):
+        batch = Batch.objects.create(item_count=3, sample_type='WB')
+        patient = Patient.objects.create(registration_datetime=timezone.now())
+        items = []
+        for _ in range(3):
+            receive = Receive(
+                batch=batch,
+                patient=patient,
+                receive_datetime=datetime.today(),
+                collection_date=date.today(),
+                collection_time=datetime.today().now(),
+                protocol_number='BHP080',
+                clinician_initials='XM',
+                specimen_condition='10',
+                sample_type='WB',
+                site_code='02',
+                tube_count=1,
+            )
+            items.append(receive)
+        self.assertEqual(Receive.objects.filter(batch=batch).count(), 0)
+        BatchHelper(batch).savedraft_batch(items)
+        self.assertEqual(Receive.objects.filter(batch=batch).count(), 3)
+
+    def test_receive_save_raises(self):
+        batch = Batch.objects.create(item_count=3, sample_type='WB')
+        items = []
+        for _ in range(3):
+            receive = Receive(
+                batch=batch,
+                receive_datetime=datetime.today(),
+                collection_date=date.today(),
+                collection_time=datetime.today().now(),
+                protocol_number='BHP080',
+                clinician_initials='XM',
+                specimen_condition='10',
+                sample_type='WB',
+                site_code='02',
+                tube_count=1,
+            )
+            items.append(receive)
+        self.assertEqual(Receive.objects.filter(batch=batch).count(), 0)
+        batch_helper = BatchHelper(batch)
+        self.assertRaises(BatchError, batch_helper.savedraft_batch, items)
+        self.assertEqual(Receive.objects.filter(batch=batch).count(), 0)
+
+    def test_savedraft_batch(self):
         batch = Batch.objects.create(item_count=3, sample_type='WB')
         patient = Patient.objects.create(registration_datetime=timezone.now())
         items = []
@@ -68,7 +111,19 @@ class TestBatch(TransactionTestCase):
                 specimen_reference=str(n),
             )
             items.append(batch_item)
-        self.assertEqual(BatchItem.objects.filter(batch=batch).count(), 0)
-        batch_helper = BatchHelper(batch)
-        batch_helper.add(items)
+        BatchHelper(batch).savedraft_batch(items)
+        self.assertEqual(Receive.objects.filter(batch=batch).count(), 0)
         self.assertEqual(BatchItem.objects.filter(batch=batch).count(), 3)
+
+    def test_savereceive_batch_fail(self):
+        batch = Batch.objects.create(item_count=3, sample_type='WB')
+        patient = Patient.objects.create(registration_datetime=timezone.now())
+        items = []
+        for _ in range(3):
+            receive = Receive(
+                patient=patient,
+            )
+            items.append(receive)
+        BatchHelper(batch).receive_batch(items)
+        self.assertEqual(Receive.objects.filter(batch=batch).count(), 0)
+        self.assertEqual(BatchItem.objects.filter(batch=batch).count(), 3) 

@@ -5,6 +5,7 @@ from edc_base.model.models import BaseUuidModel, HistoricalRecords
 
 from getresults_patient.models import Patient
 
+from .batch import Batch
 from .identifiers import ReceiveIdentifier
 
 
@@ -16,12 +17,7 @@ class Receive(BaseUuidModel):
         unique=True
     )
 
-    batch_identifier = models.CharField(
-        max_length=25,
-        null=True,
-        blank=True,
-        editable=False,
-    )
+    batch = models.ForeignKey(Batch)
 
     patient = models.ForeignKey(Patient)
 
@@ -30,11 +26,14 @@ class Receive(BaseUuidModel):
     )
 
     specimen_reference = models.CharField(
-        max_length=25)
+        max_length=25,
+        null=True,
+        blank=True,
+    )
 
     collection_date = models.DateField()
 
-    colection_time = models.TimeField()
+    collection_time = models.TimeField()
 
     protocol_number = models.CharField(
         verbose_name='Protocol',

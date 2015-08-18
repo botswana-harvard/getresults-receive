@@ -7,38 +7,8 @@ from getresults_patient.models import Patient
 
 from .identifiers import ReceiveIdentifier
 
-from ..choices import PROTOCOL
 
-
-class BaseReceive(BaseUuidModel):
-
-    patient = models.ForeignKey(Patient)
-
-    receive_datetime = models.DateTimeField(
-        default=timezone.now
-    )
-
-    specimen_reference = models.CharField(
-        max_length=25)
-
-    collection_datetime = models.DateTimeField()
-
-    protocol_number = models.CharField(
-        verbose_name='Protocol',
-        max_length=6,
-        choices=PROTOCOL
-    )
-
-    clinician_initials = models.CharField(
-        verbose_name='Clinician\'s initials',
-        max_length=3,
-    )
-
-    class Meta:
-        abstract = True
-
-
-class Receive(BaseReceive):
+class Receive(BaseUuidModel):
 
     receive_identifier = models.CharField(
         max_length=25,
@@ -52,6 +22,43 @@ class Receive(BaseReceive):
         blank=True,
         editable=False,
     )
+
+    patient = models.ForeignKey(Patient)
+
+    receive_datetime = models.DateTimeField(
+        default=timezone.now
+    )
+
+    specimen_reference = models.CharField(
+        max_length=25)
+
+    collection_date = models.DateField()
+
+    colection_time = models.TimeField()
+
+    protocol_number = models.CharField(
+        verbose_name='Protocol',
+        max_length=6,
+    )
+
+    clinician_initials = models.CharField(
+        verbose_name='Clinician\'s initials',
+        max_length=3,
+    )
+
+    specimen_condition = models.IntegerField()
+
+    sample_type = models.CharField(
+        max_length=2,
+    )
+
+    site_code = models.CharField(
+        max_length=2,
+        null=True,
+        blank=True,
+    )
+
+    tube_count = models.IntegerField()
 
     history = HistoricalRecords()
 

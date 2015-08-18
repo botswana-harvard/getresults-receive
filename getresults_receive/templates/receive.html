@@ -50,84 +50,53 @@
 {% endblock %}
 {% block content %}
     <h2 class="sub-header">{{section_head}}</h2>
-	<form class="form-inline" enctype="multipart/form-data">
+	<form class="form-inline" enctype="multipart/form-data" id="inline_form_id" action="" method="post">
+		<div class="container">
 		{% for index in batch_size %}
-        	{% csrf_token %}
-                <div class="row form-inline" id="row_inline_2">
-                    <div class="checkbox"></label><input type="checkbox"></div>
-                      <div class="form-group">
-                        <label for="patient_id"></label>
+        	{% csrf_token %}         	
+				  <div class="row">
+				    <div class="col-sm-2">
+				    	<label for="patient_id"></label>
                         <input type="text" class="form-control" id="patient_id" name="patient_name" placeholder="Patient Identifier">
-                      </div>
-                      <div class="form-group">
-                        <label for="collect_datetime"></label>
-                        <input type="datetime" class="form-control" id="collect_date_id" name="collect_datetime_name" value="{{collection_date_name}}" placeholder="Colletion Datetime">
-                      </div>
-                      <div class="form-group">
-                        <label for="rec_datetime"></label>
+				    </div>
+				    <div class="col-sm-2">
+				    	<label for="rec_datetime"></label>
                         <input type="datetime" class="form-control" id="rec_datetime_id" name="rec_datetime_name" placeholder="Receive Datetime">
-                      </div>
-                      <div class="form-group">
-                        <label for="sample_type"></label>
-                        <input type="text" class="form-control" id="sample_type_id" name="sample_type_name" value="{{sample_type_name}}" placeholder="Sample Type">
-                      </div>
-                      <div class="form-group">
-                        <label for="sample_type"></label>
-                        <input type="text" class="form-control" id="site_code_id" name="site_code_name" value="{{site_code_name}}" placeholder="Site Code">
-                      </div>
-                      <div class="form-group">
-                        <label for="protocol_no"></label>
-                        <input type="text" class="form-control" id="protocol_no_id" name="protocol_no_name" value="{{protocol_no_name}}" placeholder="Protocol Number">
-                      </div>
-                      <div class="checkbox"></label><input type="checkbox"></div>
-              	</div>
+				    </div>
+				    <div class="col-sm-2">
+				    	<label for="sample_type"></label>
+                        <input type="text" class="form-control" id="sample_type_id" name="sample_type_name" value="{{sample_type_name}}" placeholder="Sample Type" {% if sample_type_name %}readonly{% endif %}>
+				    </div>
+				    <div class="col-sm-2">
+				    	<label for="sample_type"></label>
+                        <input type="text" class="form-control" id="site_code_id" name="site_code_name" value="{{site_code_name}}" placeholder="Site Code" {% if site_code_name %}readonly{% endif %}>
+				    </div>
+				    <div class="col-sm-2">
+				    	<label for="protocol_no"></label>
+                        <input type="text" class="form-control" id="protocol_no_id" name="protocol_no_name" value="{{protocol_no_name}}" placeholder="Protocol Number" {% if protocol_no_name %}readonly{% endif %}>
+				    </div>
+				    <div class="col-sm-1">
+				    	<div class="checkbox"></label><input type="checkbox"></div>
+				    </div>
+				  </div>       	
           {% endfor %}
-          </div>
           <div class="modal-footer">
-	        <button type="button" class="btn btn-primary" name="receive" id="park_button">Park</button>
-	        <button type="button" class="btn btn-primary" name="receive_all" id="submit_button">Submit</button>
+	        <button type="button" class="btn btn-primary" name="receive" id="save_draft_button_id">Save Draft</button>
+	        <button type="button" class="btn btn-primary" name="receive_all" id="submit_button_id">Submit</button>
 	      </div>
+       </div>
     </form>
     <script>
 		$(document).ready(function(){
-			$("#sample_type_input").keyup(function (){
-				var value = $(this).val();
-			    $('.form-control').each(function() {
-			    	if ($(this).attr('id') == 'sample_type') {
-			    		$(this).val(value);
-			    	}
-			    });
+			$("#submit_button_id").click(function (){
+				$("#inline_form_id").attr('action', location.protocol + '//' + location.host + '/receive/?action=receive');
+				alert($("#inline_form_id").attr('action'));
+				$("#inline_form_id").submit();
 			});
-			
-			$("#protocol_number_input").keyup(function (){
-				var value = $(this).val();
-			    $('.form-control').each(function() {
-			    	if ($(this).attr('id') == 'protocol_no') {
-			    		$(this).val(value);
-			    	}
-			    });
+			$("#save_draft_button_id").click(function (){
+				$("#inline_form_id").attr('action', location.protocol + '//' + location.host + '/receive/?action=draft');
+				$("#inline_form_id").submit();
 			});
-			
-			$("#number_samples_input").keyup(function (){
-				var value = $(this).val();
-				var form_element_div = $('#dynamic_fields');
-				var append_html= '<div class="checkbox"><label><input type="checkbox">\
-				    </label><div class="form-group"><label for="patient_id"></label><input type="text" class="form-control" id="patient_id" name="patient_id" placeholder="Patient Identifier">\
-					</div><div class="form-group"><label for="collect_datetime"></label><input type="text" class="form-control" id="collect_datetime" name="collect_datetime" placeholder="Colletion Datetime">\
-					</div><div class="form-group"><label for="rec_datetime"></label><input type="text" class="form-control" id="rec_datetime" name="rec_datetime" placeholder="Receive Datetime">\
-					</div><div class="form-group"><label for="sample_type"></label><input type="text" class="form-control" id="sample_type" name="sample_type" placeholder="Sample Type"></div>\
-                    <div class="form-group"><label for="protocol_no"></label><input type="text" class="form-control" id="protocol_no" name="protocol_no" placeholder="Protocol Number"></div>\
-                    <div class="checkbox"></label><input type="checkbox"></div>';
-                form_element_div.children().remove();
-                form_element_div.append(append_html);
-				for (i = 0; i < value - 1; i++) {
-					//if(value==1){
-					//	return;
-					//}
-				    form_element_div.append(append_html);
-				    form_element_div = $('#dynamic_fields');
-				}    
-			});
-		});
+		});	
 	 </script>
 {% endblock %}

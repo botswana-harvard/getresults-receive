@@ -18,7 +18,7 @@ class BatchPresetView(TemplateView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def get(self, request):
+    def get(self, request, **kwargs):
         # form = self.form_class(initial=self.initial)
         context = self.get_context_data()
         return self.render_to_response(context)

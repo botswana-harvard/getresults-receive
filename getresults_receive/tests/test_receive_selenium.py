@@ -19,6 +19,7 @@ class TestReceiveSelenium(BaseSeleniumTest):
         receive.click()
         time.sleep(1)
         self.assertTrue('Receive', self.browser.title)
+        time.sleep(4)
         sample_button = self.browser.find_element_by_name("receive_sample")
         sample_button.click()
         time.sleep(1)

@@ -7,7 +7,7 @@ from getresults_patient.models import Patient
 
 from ..models import Batch, BatchItem
 
-from ..models.batch_helper import BatchError, BatchHelper
+from ..batch_helper import BatchError, BatchHelper
 
 
 class TestBatch(TransactionTestCase):

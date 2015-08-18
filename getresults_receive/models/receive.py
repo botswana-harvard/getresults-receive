@@ -1,4 +1,8 @@
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 from django.db import models
+from django.db.models import get_model
 from django.utils import timezone
 
 from edc_base.model.models import BaseUuidModel, HistoricalRecords
@@ -73,3 +77,27 @@ class Receive(BaseUuidModel):
     class Meta:
         app_label = 'getresults_receive'
         db_table = 'getresults_receive'
+        unique_together = (
+            ('protocol_number', 'patient', 'collection_date', 'collection_time', 'sample_type', 'tube_count', ))
+
+    def create_aliquot(self, instance):
+        """Create an aliquote."""
+        aliquot_model = get_model('getresults_aliquot', 'Aliquot')
+        try:
+            aliquot_model.objects.create(
+                receive=instance
+            )
+        except:
+            pass
+
+
+@receiver(post_save, weak=False, dispatch_uid='create_aliquot_on_post_save')
+def create_aliquot_on_post_save(sender, instance, raw, created, using, **kwargs):
+    """Creates and aliquot after a sample is received."""
+    if not raw:
+        if created:
+            try:
+                receive_sample = Receive.objects.get(pk=instance.pk)
+                receive_sample.create_aliquot(instance)
+            except Receive.DoesNotExist:
+                pass

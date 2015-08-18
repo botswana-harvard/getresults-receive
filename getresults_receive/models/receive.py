@@ -26,7 +26,10 @@ class Receive(BaseUuidModel):
     )
 
     specimen_reference = models.CharField(
-        max_length=25)
+        max_length=25,
+        null=True,
+        blank=True,
+    )
 
     collection_date = models.DateField()
 

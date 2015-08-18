@@ -12,7 +12,11 @@ class BatchItem(BaseUuidModel):
 
     batch = models.ForeignKey(Batch)
 
-    patient = models.ForeignKey(Patient)
+    patient = models.ForeignKey(
+        Patient,
+        null=True,
+        blank=True,
+    )
 
     receive_datetime = models.DateTimeField(
         default=timezone.now,
@@ -63,6 +67,11 @@ class BatchItem(BaseUuidModel):
 
     site_code = models.CharField(
         max_length=2,
+        null=True,
+        blank=True,
+    )
+
+    tube_count = models.IntegerField(
         null=True,
         blank=True,
     )

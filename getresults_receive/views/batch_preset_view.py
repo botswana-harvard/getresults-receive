@@ -32,7 +32,7 @@ class BatchPresetView(TemplateView):
                            )
             return self.render_to_response(context)
         else:
-            raise 
+            raise
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -40,7 +40,6 @@ class ReceiveView(TemplateView):
         return super(ReceiveView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        username = self.request.user.username
         context = super().get_context_data(**kwargs)
         context.update(
             project_name='GETRESULTS: RECEIVE',

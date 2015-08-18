@@ -100,6 +100,6 @@ class TestReceiveSelenium(BaseSeleniumTest):
         receive.click()
         time.sleep(1)
         self.browser.find_element_by_name('view_my_batches').click()
-        self.assertIn(self.username, self.browser.current_url)
+        self.assertIn('receive_user_batches', self.browser.current_url)
         self.browser.save_screenshot('getresults_receive/screenshots/receive_user_batch.png')
 

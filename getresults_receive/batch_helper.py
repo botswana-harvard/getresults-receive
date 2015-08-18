@@ -33,9 +33,10 @@ class BatchHelper(object):
     def receive_batch(self, items):
         try:
             self.add(items)
+            BatchItem.objects.filter(batch=self.batch).delete()
             self.batch.status = 'Closed'
             self.batch.save()
-        except BatchError:
+        except BatchError as e:
             batch_items = []
             for item in items:
                 batch_item = BatchItem(
@@ -54,3 +55,4 @@ class BatchHelper(object):
                 )
                 batch_items.append(batch_item)
             self.savedraft_batch(batch_items)
+            raise BatchError("Batch not received, saved as open batch. Error: {}".format(e))

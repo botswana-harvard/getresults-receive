@@ -84,15 +84,6 @@ class TestBatch(TransactionTestCase):
         for _ in range(3):
             receive = Receive(
                 batch=batch,
-                receive_datetime=datetime.today(),
-                collection_date=date.today(),
-                collection_time=datetime.today().now(),
-                protocol_number='BHP080',
-                clinician_initials='XM',
-                specimen_condition='10',
-                sample_type='WB',
-                site_code='02',
-                tube_count=1,
             )
             items.append(receive)
         self.assertEqual(Receive.objects.filter(batch=batch).count(), 0)
@@ -124,6 +115,76 @@ class TestBatch(TransactionTestCase):
                 patient=patient,
             )
             items.append(receive)
-        BatchHelper(batch).receive_batch(items)
+        batch_helper = BatchHelper(batch)
+        self.assertRaises(BatchError, batch_helper.receive_batch, items)
         self.assertEqual(Receive.objects.filter(batch=batch).count(), 0)
-        self.assertEqual(BatchItem.objects.filter(batch=batch).count(), 3) 
+        self.assertEqual(BatchItem.objects.filter(batch=batch).count(), 3)
+
+    def test_receivebatch_status_open(self):
+        batch = Batch.objects.create(item_count=3, sample_type='WB')
+        patient = Patient.objects.create(registration_datetime=timezone.now())
+        items = []
+        for _ in range(3):
+            receive = Receive(
+                patient=patient,
+            )
+            items.append(receive)
+        batch_helper = BatchHelper(batch)
+        self.assertRaises(BatchError, batch_helper.receive_batch, items)
+        self.assertEqual(batch.status, "Open")
+    
+    def test_batch_status_closed(self):
+        batch = Batch.objects.create(item_count=3, sample_type='WB')
+        patient = Patient.objects.create(registration_datetime=timezone.now())
+        items = []
+        for _ in range(3):
+            receive = Receive(
+                batch=batch,
+                patient=patient,
+                receive_datetime=datetime.today(),
+                collection_date=date.today(),
+                collection_time=datetime.today().now(),
+                protocol_number='BHP080',
+                clinician_initials='XM',
+                specimen_condition='10',
+                sample_type='WB',
+                site_code='02',
+                tube_count=1,
+            )
+            items.append(receive)
+        BatchHelper(batch).receive_batch(items)
+        self.assertEqual(batch.status, "Closed")
+    
+    def test_receive_saveddraft(self):
+        batch = Batch.objects.create(item_count=3, sample_type='WB')
+        patient = Patient.objects.create(registration_datetime=timezone.now())
+        items = []
+        for n in range(3):
+            batch_item = BatchItem(
+                batch=batch,
+                patient=patient,
+                specimen_reference=str(n),
+            )
+            items.append(batch_item)
+        BatchHelper(batch).savedraft_batch(items)
+        receive_items = []
+        batch_items = BatchItem.objects.filter(batch=batch)
+        for item in batch_items:
+            receive = Receive(
+                batch=item.batch,
+                patient=item.patient,
+                specimen_reference=item.specimen_reference,
+                receive_datetime=datetime.today(),
+                collection_date=date.today(),
+                collection_time=datetime.today().now(),
+                protocol_number='BHP080',
+                clinician_initials='XD',
+                specimen_condition='10',
+                sample_type='WB',
+                site_code='02',
+                tube_count=1,
+            )
+            receive_items.append(receive)
+        BatchHelper(batch).receive_batch(receive_items)
+        self.assertEqual(Receive.objects.filter(batch=batch).count(), 3)
+        self.assertEqual(BatchItem.objects.filter(batch=batch).count(), 0)

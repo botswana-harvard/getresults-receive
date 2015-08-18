@@ -19,7 +19,7 @@ class TestReceiveSelenium(BaseSeleniumTest):
         receive.click()
         time.sleep(1)
         self.assertTrue('Receive', self.browser.title)
-        sample_button = self.browser.find_element_by_name("receive_sample")
+        sample_button = self.browser.find_element_by_name("submit_button")
         sample_button.click()
         time.sleep(1)
         self.browser.save_screenshot('getresults_receive/screenshots/receive_sample.png')

@@ -1,9 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
-from django.conf import settings
+from django.shortcuts import render
 
 from ..models import Receive
+from ..models import Batch
 
 
 class Option(object):
@@ -39,6 +40,7 @@ class ReceiveView(TemplateView):
         return super(ReceiveView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
+        username = self.request.user.username
         context = super().get_context_data(**kwargs)
         context.update(
             project_name='GETRESULTS: RECEIVE',
@@ -47,7 +49,7 @@ class ReceiveView(TemplateView):
             sidebar_options=[
                 Option('Receive by batch', None, 'modal', '#batchModal'),
                 Option('Receive single', None, 'modal', '#sampleModal'),
-                Option('View my batches', '#', None, None),
+                Option('View my batches', 'receive_user_batches', None, None),
                 Option('View all batches', '#', None, None),
                 Option('Search for batch', '#', None, None),
                 Option('Search for specimen', '#', None, None),
@@ -71,3 +73,19 @@ class ReceiveView(TemplateView):
             received_count=Receive.objects.all().count()
         )
         return context
+
+#     def get(self, request):
+#         batch = Batch.objects.filter(user_created=request.user.username)
+#         context = self.get_context_data()
+#         context.update(
+#             batch,
+#             header=[
+#                 'Batch Identifier',
+#                 'Item Count',
+#                 'Status',
+#                 'Protocol Number',
+#                 'Site Code'
+#             ],
+#             named_template='my_batch.html'
+#         )
+#         return self.render_to_response(context)

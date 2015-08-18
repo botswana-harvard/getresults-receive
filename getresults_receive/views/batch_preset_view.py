@@ -1,15 +1,6 @@
 from django.views.generic import TemplateView
-from django.shortcuts import render
-
-from ..models import Receive
 
 from ..forms import BatchForm
-
-
-def show_batch(request, **kwargs):
-    batch = Receive.objects.filter(batch_identifier=kwargs.get('batch_identifier'))
-    kwargs['batch_received'] = batch
-    return BatchPresetView.as_view()(request, **kwargs)
 
 
 class BatchPresetView(TemplateView):

@@ -9,8 +9,12 @@
               {% for option in sidebar_options %}
               	{% if option.data_toggle = "modal" %}
 		            <li><a name="{{ option.name }}" data-toggle="{{ option.data_toggle }}" href="{{ option.data_target }}">{{ option.link_text|upper }}</a></li>
-    			{% else %}          	
-	            	<li><a name="{{ option.name }}" data-toggle="collapse" data-parent="#accordion" href="#collapse{{forloop.counter}}">{{ option.link_text|lower }}</a></li>
+    			{% else %}
+    				{% if option.href = 'receive_user_batches' %}
+	            		<li><a name="{{ option.name }}" href="{% url 'receive_user_batches' %} " >{{ option.link_text|lower }}</a></li>
+	            	{% else %}
+	            		<li><a name="{{ option.name }}" href="{{option.href}}" >{{ option.link_text|lower }}</a></li>
+	            	{% endif %}
 	            {% endif %}
             {% endfor %}
           </ul>

@@ -92,3 +92,14 @@ class TestReceiveSelenium(BaseSeleniumTest):
         self.assertEqual(receive_site_code_name.get_attribute('value'), '14')
         receive_protocol_no_name = self.browser.find_elements_by_name("protocol_no_name")[0]
         self.assertEqual(receive_protocol_no_name.get_attribute('value'), '066')
+
+    def test_user_batch_filter(self):
+        self.login()
+        time.sleep(1)
+        receive = self.browser.find_element_by_name("topbar_receive")
+        receive.click()
+        time.sleep(1)
+        self.browser.find_element_by_name('view_my_batches').click()
+        self.assertIn(self.username, self.browser.current_url)
+        self.browser.save_screenshot('getresults_receive/screenshots/receive_user_batch.png')
+

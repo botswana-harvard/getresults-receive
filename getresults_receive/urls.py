@@ -19,12 +19,14 @@ from django.contrib import admin
 from getresults.admin import admin_site
 from getresults import urls as getresults_urls
 
-from .views import DashboardView, ReceiveView, show_batch, BatchPresetView
+from .views import DashboardView, ReceiveView, show_batch, BatchPresetView, display_batch
 
 admin.autodiscover()
 
 urlpatterns = [
     url(r'^admin/', include(admin_site.urls)),
+    url(r'^receive/receive_user_batches/', display_batch,
+        name='receive_user_batches'),
     url(r'^receive/', ReceiveView.as_view(), name='receive'),
     url(r'^receive_batch/', BatchPresetView.as_view(), name='receive_batch'),
     url(r'^batch/(?P<batch_identifier>[0-9A-Z\-]+)/', show_batch, name='batch'),

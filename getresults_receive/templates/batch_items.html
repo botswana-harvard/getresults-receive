@@ -8,13 +8,14 @@
             <th>{{head}}</th>
         {% endfor %}
       </tr>
-      {% for batch in batches %}
+      {% for batch_item in batch_received %}
         <tr>
-          <td><a href="{% url 'batch' batch_identifier=batch.batch_identifier %}">{{batch.batch_identifier}}</a></td>
-          <td>{{batch.item_count}}</td>
-          <td>{{batch.status}}</td>
-          <td>{{batch.protocol_number}}</td>
-          <td>{{batch.site_code}}</td>
+          <td>{{batch_item.patient.patient_identifier}}</a></td>
+          <td>{{batch_item.receive_datetime}}</td>
+          <td>{{batch_item.specimen_reference}}</td>
+          <td>{{batch_item.protocol_number}}</td>
+          <td>{{batch_item.specimen_condition}}</td>
+          <td>{{batch_item.sample_type}}</td>
         </tr>
       {% endfor %}
       </table>

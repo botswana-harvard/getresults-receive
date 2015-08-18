@@ -20,6 +20,10 @@ class ReceiveView(TemplateView):
 
     template_name = 'receive.html'
 
+    def post(self, request):
+        context = self.get_context_data()
+        return self.render_to_response(context)
+
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ReceiveView, self).dispatch(*args, **kwargs)

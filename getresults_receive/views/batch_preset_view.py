@@ -19,12 +19,11 @@ class BatchPresetView(TemplateView):
         super().__init__(**kwargs)
 
     def get(self, request, **kwargs):
-        # form = self.form_class(initial=self.initial)
         context = self.get_context_data()
+        context.update(named_template='receive_batch_items.html')
         return self.render_to_response(context)
 
     def post(self, request):
-        # form = self.form_class(initial=self.initial)
         context = self.get_context_data()
         form = BatchForm(request.POST)
         if form.is_valid():
@@ -37,9 +36,12 @@ class BatchPresetView(TemplateView):
                            sample_type_name=sample_type,
                            protocol_no_name=protocol_no,
                            site_code_name=site_code,
-                           batch_size=range(0, item_count)
+                           batch_size=range(0, item_count),
+                           named_template='receive_batch_items.html'
                            )
-        return self.render_to_response(context)
+            return self.render_to_response(context)
+        else:
+            raise 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

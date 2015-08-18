@@ -26,7 +26,7 @@ admin.autodiscover()
 urlpatterns = [
     url(r'^admin/', include(admin_site.urls)),
     url(r'^receive/', ReceiveView.as_view(), name='receive'),
-    url(r'^batch_preset/', BatchPresetView.as_view(), name='batch_preset'),
+    url(r'^receive_batch/', BatchPresetView.as_view(), name='receive_batch'),
     url(r'^batch/(?P<batch_identifier>[0-9A-Z\-]+)/', show_batch, name='batch'),
     url(r'^dashboard/', DashboardView.as_view(), name='dashboard'),
     url(r'', include(getresults_urls)),

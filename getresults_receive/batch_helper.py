@@ -22,3 +22,7 @@ class BatchHelper(object):
     def validate_count(self, items):
         if len(items) != self.batch.item_count:
             raise BatchError('Expected {} items. Got {}'.format(self.batch.item_count, len(items)))
+
+    def savedraft_batch(self, items):
+        self.batch.status = 'Open'
+        self.add(items)

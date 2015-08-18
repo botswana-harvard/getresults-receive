@@ -31,7 +31,7 @@ class BatchItem(BaseUuidModel):
         blank=True,
     )
 
-    colection_time = models.TimeField(
+    collection_time = models.TimeField(
         null=True,
         blank=True,
     )

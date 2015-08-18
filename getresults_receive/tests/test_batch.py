@@ -1,51 +1,78 @@
-from django.test.testcases import TestCase
 from datetime import datetime
+
+from django.test.testcases import TransactionTestCase
+from django.utils import timezone
 
 from getresults_patient.models import Patient
 
-from ..utils import BatchHelper
-
 from ..models import Batch, BatchItem
-     
-class TestBatch(TestCase):
 
-    def tearDown(self):
-        Batch.objects.all().delete()
-        BatchItem.objects.all().delete()
+from ..models.batch_helper import BatchError, BatchHelper
+
+
+class TestBatch(TransactionTestCase):
 
     def test_create_batch(self):
         """Test that a batch identifier is assigned when batch created"""
         batch = Batch.objects.create()
         prefix = datetime.today().strftime('%Y%m%d')
         self.assertTrue(batch.batch_identifier.startswith(prefix))
-        
+
     def test_update_batch_identifier(self):
         """Test that a batch identifier is unique"""
         batch = Batch.objects.create()
         batch_id = batch.batch_identifier
         batch.save()
-        self.assertEqual(batch_id, batch.batch_identifier) 
-    
-    def test_batchitem_save(self):
-        """Test that transaction persists change if no fail"""
+        self.assertEqual(batch_id, batch.batch_identifier)
+
+    def test_batchitem_count_raises(self):
         batch = Batch.objects.create(item_count=3, sample_type='WB')
-        patient = Patient.objects.create(registration_datetime=datetime.now())
+        patient = Patient.objects.create(registration_datetime=timezone.now())
         items = []
         items.append(BatchItem(batch=batch, patient=patient))
         items.append(BatchItem(batch=batch, patient=patient))
-        items.append(BatchItem(batch=batch, patient=patient))
-        self.assertEqual(BatchItem.objects.all().count(), 0)
-        BatchHelper().batchitem_transaction(items)
-        self.assertEqual(BatchItem.objects.all().count(), 3)
-    
-    def test_batchitem_rollback(self):
-        """Test that transaction rolls back when one item fails"""
+        batch_helper = BatchHelper(batch)
+        self.assertRaises(BatchError, batch_helper.add, items)
+
+    def test_batchitem_count(self):
         batch = Batch.objects.create(item_count=3, sample_type='WB')
-        patient = Patient.objects.create(registration_datetime=datetime.now())
+        patient = Patient.objects.create(registration_datetime=timezone.now())
         items = []
         items.append(BatchItem(batch=batch, patient=patient))
         items.append(BatchItem(batch=batch, patient=patient))
-        items.append(BatchItem())
+        batch_helper = BatchHelper(batch)
+        self.assertRaises(BatchError, batch_helper.add, items)
+
+    def test_batchitem_save_raises(self):
+        batch = Batch.objects.create(item_count=3, sample_type='WB')
+        patient = Patient.objects.create(registration_datetime=timezone.now())
+        items = []
+        for _ in range(3):
+            batch_item = BatchItem(
+                batch=batch,
+                patient=patient,
+                specimen_reference=None,
+                collection_datetime=timezone.now()
+            )
+            items.append(batch_item)
         self.assertEqual(BatchItem.objects.all().count(), 0)
-        BatchHelper().batchitem_transaction(items)
+        batch_helper = BatchHelper(batch)
+        self.assertRaises(BatchError, batch_helper.add, items)
         self.assertEqual(BatchItem.objects.all().count(), 0)
+
+    def test_batchitem_save_ok(self):
+        batch = Batch.objects.create(item_count=3, sample_type='WB')
+        patient = Patient.objects.create(registration_datetime=timezone.now())
+        items = []
+        for n in range(3):
+            batch_item = BatchItem(
+                batch=batch,
+                patient=patient,
+                specimen_reference=str(n),
+                collection_datetime=timezone.now()
+            )
+            items.append(batch_item)
+        self.assertEqual(BatchItem.objects.filter(batch=batch).count(), 0)
+        batch_helper = BatchHelper(batch)
+        batch_helper.add(items)
+        self.assertEqual(BatchItem.objects.filter(batch=batch).count(), 3)

@@ -3,6 +3,8 @@ from django.db import models
 from edc_base.model.models import BaseUuidModel
 from getresults_identifier.batch_identifier import BatchIdentifier
 
+from .receive import BaseReceive
+
 
 class Batch(BaseUuidModel):
 
@@ -31,6 +33,14 @@ class Batch(BaseUuidModel):
         if not self.id:
             self.batch_identifier = BatchIdentifier().identifier
         super().save(*args, **kwargs)
+
+    class Meta:
+        app_label = "getresults_receive"
+
+
+class BatchItem(BaseReceive):
+
+    batch = models.ForeignKey(Batch)
 
     class Meta:
         app_label = "getresults_receive"

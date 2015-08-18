@@ -1,18 +1,50 @@
 from django.db import models
+from django.utils import timezone
 
-from edc_base.model.models import HistoricalRecords
+from edc_base.model.models import BaseUuidModel, HistoricalRecords
+
+from getresults_patient.models import Patient
 
 from .identifiers import ReceiveIdentifier
-from .receive_base import ReceiveBase
 
 from ..choices import PROTOCOL
 
 
-class Receive(ReceiveBase):
+class BaseReceive(BaseUuidModel):
+
+    patient = models.ForeignKey(Patient)
+
+    receive_datetime = models.DateTimeField(
+        default=timezone.now
+    )
+
+    specimen_reference = models.CharField(
+        max_length=25)
+
+    collection_datetime = models.DateTimeField()
+
+    protocol_number = models.CharField(
+        verbose_name='Protocol',
+        max_length=6,
+        choices=PROTOCOL
+    )
+
+    clinician_initials = models.CharField(
+        verbose_name='Clinician\'s initials',
+        max_length=3,
+    )
+
+    class Meta:
+        abstract = True
+
+
+class Receive(BaseReceive):
+
     receive_identifier = models.CharField(
         max_length=25,
         editable=False,
-        unique=True, )
+        unique=True
+    )
 
     batch_identifier = models.CharField(
         max_length=25,
@@ -20,11 +52,6 @@ class Receive(ReceiveBase):
         blank=True,
         editable=False,
     )
-
-    protocol_number = models.CharField(
-        verbose_name='Protocol Number',
-        max_length=6,
-        choices=PROTOCOL)
 
     history = HistoricalRecords()
 

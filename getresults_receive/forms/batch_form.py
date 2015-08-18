@@ -1,6 +1,5 @@
 from django import forms
-from django.utils import timezone
-from datetime import datetime, date
+
 from ..models import Batch
 
 
@@ -14,4 +13,4 @@ class BatchForm(forms.ModelForm):
 
     class Meta:
         model = Batch
-        fields = ['item_count',]
+        fields = ['item_count']

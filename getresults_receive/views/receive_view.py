@@ -21,7 +21,10 @@ class ReceiveView(TemplateView):
     template_name = 'receive.html'
 
     def post(self, request):
-        context = self.get_context_data()
+        named_template = None
+        if (request.GET.get('action') and (request.GET.get('action') == ('receive' or 'draft'))):
+            named_template = 'receive_batch_items.html'
+        context = self.get_context_data(named_template=named_template)
         return self.render_to_response(context)
 
     @method_decorator(login_required)

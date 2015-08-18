@@ -49,6 +49,26 @@
     <h2 class="sub-header">{{section_head}}</h2>
 	<form class="form-inline" enctype="multipart/form-data" id="inline_form_id" action="" method="post">
 		<div class="container">
+			<div class="row">
+				    <div class="col-sm-2">
+				    	Patient Identifier
+				    </div>
+				    <div class="col-sm-2">
+				    	Collection Date
+				    </div>
+				    <div class="col-sm-2">
+				    	Sample Type
+				    </div>
+				    <div class="col-sm-2">
+				    	Site Code
+				    </div>
+				    <div class="col-sm-2">
+				    	Protocol Number
+				    </div>
+				    <div class="col-sm-1">
+				    	Primary Tube
+				    </div>
+				  </div>       	
 		{% for index in batch_size %}
         	{% csrf_token %}         	
 				  <div class="row">
@@ -73,7 +93,9 @@
                         <input type="text" class="form-control" id="protocol_no_id" name="protocol_no_name" value="{{protocol_no_name}}" placeholder="Protocol Number" {% if protocol_no_name %}readonly{% endif %}>
 				    </div>
 				    <div class="col-sm-1">
-				    	<div class="checkbox"></label><input type="checkbox"></div>
+				    	<div class="checkbox">
+				    		<label><input type="checkbox" id='primary_aliquot'></label>
+				    	</div>
 				    </div>
 				  </div>       	
           {% endfor %}

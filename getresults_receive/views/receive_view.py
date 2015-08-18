@@ -23,7 +23,14 @@ class ReceiveView(TemplateView):
     def post(self, request):
         named_template = None
         if (request.GET.get('action') and (request.GET.get('action') == ('receive' or 'draft'))):
+            # For post requests, the template we will include depends on what the user is attempting to do.
             named_template = 'receive_batch_items.html'
+        context = self.get_context_data(named_template=named_template)
+        return self.render_to_response(context)
+
+    def get(self, request):
+        # For get requests, its safe to assume the user will always be trying to receive a batch
+        named_template = 'receive_batch_items.html'
         context = self.get_context_data(named_template=named_template)
         return self.render_to_response(context)
 

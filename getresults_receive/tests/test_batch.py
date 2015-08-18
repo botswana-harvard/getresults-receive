@@ -8,6 +8,7 @@ from getresults_patient.models import Patient
 from ..models import Batch, BatchItem
 
 from ..batch_helper import BatchError, BatchHelper
+from django.views.generic.dates import timezone_today
 
 
 class TestBatch(TransactionTestCase):
@@ -45,14 +46,10 @@ class TestBatch(TransactionTestCase):
 
     def test_batchitem_save_raises(self):
         batch = Batch.objects.create(item_count=3, sample_type='WB')
-        patient = Patient.objects.create(registration_datetime=timezone.now())
         items = []
         for _ in range(3):
             batch_item = BatchItem(
                 batch=batch,
-                patient=patient,
-                specimen_reference=None,
-                collection_datetime=timezone.now()
             )
             items.append(batch_item)
         self.assertEqual(BatchItem.objects.all().count(), 0)
@@ -69,7 +66,6 @@ class TestBatch(TransactionTestCase):
                 batch=batch,
                 patient=patient,
                 specimen_reference=str(n),
-                collection_datetime=timezone.now()
             )
             items.append(batch_item)
         self.assertEqual(BatchItem.objects.filter(batch=batch).count(), 0)

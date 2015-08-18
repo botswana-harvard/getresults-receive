@@ -61,7 +61,7 @@
 				    </div>
 				    <div class="col-sm-2">
 				    	<label for="rec_datetime"></label>
-                        <input type="datetime" class="form-control" id="rec_datetime_id" name="rec_datetime_name" placeholder="Receive Datetime">
+                        <input type="text" onfocus="(this.type='date')" class="form-control" id="collection_date_id" name="collection_date_name" value="{{collection_date_name}}" placeholder="Collection Date" {% if collection_date_name %}readonly{% endif %}>
 				    </div>
 				    <div class="col-sm-2">
 				    	<label for="sample_type"></label>
@@ -96,6 +96,12 @@
 			$("#save_draft_button_id").click(function (){
 				$("#inline_form_id").attr('action', location.protocol + '//' + location.host + '/receive/?action=draft');
 				$("#inline_form_id").submit();
+			});
+			$('#collection_date_input_id').focus(function (){
+				$(this).attr('type', 'date');
+			});
+			$('#collection_date_id').focus(function (){
+				$(this).attr('type', 'date');
 			});
 		});	
 	 </script>

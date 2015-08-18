@@ -33,7 +33,7 @@ class BatchPresetView(TemplateView):
             sample_type = form.cleaned_data.get('sample_type')
             protocol_no = form.cleaned_data.get('protocol_no')
             site_code = form.cleaned_data.get('site_code')
-            context.update(collect_datetime_name=collection_date,
+            context.update(collection_date_name=collection_date.strftime("%Y-%m-%d") if collection_date else '',
                            sample_type_name=sample_type,
                            protocol_no_name=protocol_no,
                            site_code_name=site_code,

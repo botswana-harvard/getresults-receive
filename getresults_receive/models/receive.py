@@ -87,7 +87,10 @@ class Receive(BaseUuidModel):
         aliquot_model = get_model('getresults_aliquot', 'Aliquot')
         aliquot_type_model = get_model('getresults_aliquot', 'AliquotType')
         # Aliquote type will be queried by sample type on receive
-        aliquot_type = aliquot_type_model.objects.create(name='whole blood', alpha_code='WB', numeric_code='02')
+        if aliquot_type_model.objects.filter(name='whole blood', alpha_code='WB', numeric_code='02').exists():
+            aliquot_type = aliquot_type_model.objects.get(name='whole blood', alpha_code='WB', numeric_code='02')
+        else:
+            aliquot_type = aliquot_type_model.objects.create(name='whole blood', alpha_code='WB', numeric_code='02')
         try:
             aliquot_model.objects.create(
                 receive=instance,

@@ -9,9 +9,6 @@ from ..models import Receive
 class DashboardView(TemplateView):
     template_name = 'dashboard.html'
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(DashboardView, self).dispatch(*args, **kwargs)

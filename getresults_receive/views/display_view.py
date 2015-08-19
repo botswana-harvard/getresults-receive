@@ -13,7 +13,6 @@ class DisplayView(TemplateView):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        print ("yaay")
         if self.request.resolver_match.url_name == 'receive_user_batches':
             self.view_my_batches()
         if self.request.resolver_match.url_name == 'batch':
@@ -67,7 +66,5 @@ class DisplayView(TemplateView):
                 Option('Search for batch', '#', None, None),
                 Option('Search for specimen', '#', None, None),
             ],
-#             batches=kwargs.get('batches'),
-#             batch_received=kwargs.get('batch_received')
         )
         return context

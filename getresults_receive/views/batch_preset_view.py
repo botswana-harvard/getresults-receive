@@ -55,6 +55,7 @@ class BatchPresetView(TemplateView):
         else:
             message = ''
             context.update(preset_form=form)
+            context.update(batch_error='failed')
             context.update(named_template='receive_batch_items.html')
             messages.add_message(request, messages.INFO, message)
             return self.render_to_response(context)

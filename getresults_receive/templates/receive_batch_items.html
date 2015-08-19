@@ -3,8 +3,8 @@
      <button name="receive_batch" type="button" class="btn btn-primary btn-sm" id="receive_batch_button" data-toggle="modal" data-target="#batchModal">
       Batch Preset  
     </button>
-    <div class="messages-errors" style="float:right; background-color: white;">
-    	<strong>{{preset_form.errors}}</strong>
+    <div style="float:right; background-color: white;">
+    	<input type="hidden" id="error_message_input" name="error_message_input" value="{{batch_error}}"/>
    </div>
           
     <!--Batch Modal -->
@@ -19,8 +19,8 @@
             <div class="modal-body">
             <form class="form-inline" enctype="multipart/form-data" action={% url 'receive_batch' %} method='post'> 
             	{% csrf_token %}
+            	<span style="color:red;">{{preset_form.errors}}</span>
 	            <div class="row form-inline" id="row_inline_1">
-	            	
 					<div class="form-group">
 						<label for="number_samples"></label>
 						<input type="text" class="form-control" id="item_count_input_id" name="item_count" placeholder="Number of Samples">
@@ -159,6 +159,11 @@
 			});
 			$('#collection_date_id').focus(function (){
 				$(this).attr('type', 'date');
+			});
+			$( window ).load(function() {
+				if ($("#error_message_input").val() == 'failed') {
+					$( "#receive_batch_button" ).click();
+				}
 			});
 		});	
 	 </script>

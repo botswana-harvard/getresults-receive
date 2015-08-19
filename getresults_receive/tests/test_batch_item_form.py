@@ -40,23 +40,15 @@ class TestBatchItemForm(TransactionTestCase):
         batch_item_form = BatchItemForm(data=batch_items)
         self.assertTrue(batch_item_form.is_valid())
 
-    def test_batch_not_valid_without_batch(self):
+    def test_invalid_batch_has_errormsg(self):
         patient = PatientFactory()
-        batch_items = dict(patient=patient.id, colection_time=timezone.now(), collection_date=timezone.now(), sample_type='WB',
-                           protocol_number='bhp06688')
-
+        batch_items = dict(
+            patient=patient.id, colection_time=timezone.now(),
+            collection_date=timezone.now(), sample_type='WB',
+            protocol_number='bhp06688')
         batch_item_form = BatchItemForm(data=batch_items)
-
-        self.assertFalse(batch_item_form.is_valid())
-
-    def test_batch_not_valid_without_batch1(self):
-        patient = PatientFactory()
-        batch_items = dict(patient=patient.id, colection_time=timezone.now(), collection_date=timezone.now(), sample_type='WB',
-                           protocol_number='bhp06688')
-
-        batch_item_form = BatchItemForm(data=batch_items)
-
         self.assertIn('batch', batch_item_form.errors)
+        print(batch_item_form.errors)
 
     def test_batch_item_form_list(self):
         batch = Batch.objects.create(item_count=3, sample_type='WB')
@@ -67,13 +59,17 @@ class TestBatchItemForm(TransactionTestCase):
                                 ]
         self.assertEqual(len(receive.batch_item_form_list(batch_item_form_list)), 1)
 
-    def test_batch_item_form(self):
+    def test_batch_form_data_validates_in_view(self):
         batch = Batch.objects.create(item_count=3, sample_type='WB')
         patient = PatientFactory()
         receive = ReceiveView()
-        batch_item_form_list = [dict(protocol_number='bhp066', patient=patient.id, batch=batch.id, collection_date=timezone.now(),
-                                     sample_type='WB', colection_time=timezone.now())
-                                ]
+        data = dict(
+            protocol_number='bhp066', patient=patient.id, batch=batch.id,
+            collection_date=timezone.now(),
+            sample_type='WB',
+            colection_time=timezone.now())
+        batch_item_form = BatchItemForm(data=data)
+        batch_item_form_list = [batch_item_form.data]
         self.assertTrue(receive.validate_batch_items(batch_item_form_list))
 
     def test_batch(self):

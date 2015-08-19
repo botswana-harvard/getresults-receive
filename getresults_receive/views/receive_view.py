@@ -101,10 +101,13 @@ class ReceiveView(TemplateView):
             _batch_items_list = []
             for field in form_field:
                 _batch_items_list.append(self.field_data(i, request, field))
-            batch_items_list.append(dict(patient=_batch_items_list[0], collection_datetime=_batch_items_list[1],
-                                         receive_datetime=_batch_items_list[2], sample_type=_batch_items_list[3],
-                                         protocol_number=_batch_items_list[4], site_code=_batch_items_list[5])
-                                    )
+            batch_items_list.append(
+                dict(
+                    patient=_batch_items_list[0], collection_datetime=_batch_items_list[1],
+                    receive_datetime=_batch_items_list[2], sample_type=_batch_items_list[3],
+                    protocol_number=_batch_items_list[4], site_code=_batch_items_list[5]
+                )
+            )
         return batch_items_list
 
     def batch_items(self, batch_items_list):
@@ -132,16 +135,9 @@ class ReceiveView(TemplateView):
             pass
         return patient
 
-    def batch_item_form_list(self, batch_items_list):
-        batch_items_forms = []
-        for batch_item_data in batch_items_list:
-            batch_item_form = BatchItemForm(data=batch_item_data)
-            batch_items_forms.append(batch_item_form)
-        return batch_items_forms
-
-    def validate_batch_items(self, batch_items_list):
-        for batch_item_form in self.batch_item_form_list(batch_items_list):
-            if not batch_item_form.is_valid():
+    def validate_batch_items(self, batch_form_data):
+        for data in batch_form_data:
+            if not BatchItemForm(data=data).is_valid():
                 return False
         return True
 

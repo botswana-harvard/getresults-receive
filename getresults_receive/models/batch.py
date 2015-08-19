@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from edc_base.model.models import BaseUuidModel
 from getresults_identifier.batch_identifier import BatchIdentifier
@@ -8,15 +9,28 @@ class Batch(BaseUuidModel):
 
     batch_identifier = models.CharField(
         max_length=25,
+        null=True,
+        editable=False,
     )
 
-    item_count = models.IntegerField(
-        default=1,
+    batch_datetime = models.DateTimeField(
+        default=timezone.now,
+        editable=False,
+    )
+
+    receive_datetime = models.DateTimeField(
+        null=True,
+        editable=False,
     )
 
     status = models.CharField(
         max_length=10,
         default='Open',
+        editable=False,
+    )
+
+    item_count = models.IntegerField(
+        default=1,
     )
 
     sample_type = models.CharField(

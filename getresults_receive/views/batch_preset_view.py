@@ -36,6 +36,7 @@ class BatchPresetView(TemplateView):
                     sample_type=sample_type,
                     protocol_number=protocol_no,
                     site_code=site_code,
+                    user_created=request.user.username,
                 )
                 batch.save()
             except Exception as err:

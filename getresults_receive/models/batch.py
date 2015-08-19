@@ -37,12 +37,6 @@ class Batch(BaseUuidModel):
         blank=True
     )
 
-    specimen_condition = models.CharField(
-        max_length=2,
-        null=True,
-        blank=True
-    )
-
     def save(self, *args, **kwargs):
         if not self.id:
             self.batch_identifier = BatchIdentifier().identifier

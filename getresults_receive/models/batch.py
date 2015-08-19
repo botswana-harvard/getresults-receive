@@ -21,11 +21,27 @@ class Batch(BaseUuidModel):
 
     sample_type = models.CharField(
         max_length=2,
+        null=True,
+        blank=True,
     )
 
-    protocol_number = models.CharField(max_length=5, null=True, blank=True)
+    protocol_number = models.CharField(
+        max_length=5,
+        null=True,
+        blank=True
+    )
 
-    site_code = models.CharField(max_length=2, null=True, blank=True)
+    site_code = models.CharField(
+        max_length=2,
+        null=True,
+        blank=True
+    )
+
+    specimen_condition = models.CharField(
+        max_length=2,
+        null=True,
+        blank=True
+    )
 
     def save(self, *args, **kwargs):
         if not self.id:

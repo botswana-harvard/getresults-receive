@@ -1,10 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
-from django.shortcuts import render
 
 from ..models import Receive
-from ..models import Batch
 
 
 class Option(object):
@@ -21,23 +19,21 @@ class ReceiveView(TemplateView):
 
     template_name = 'receive.html'
 
-    def post(self, request):
-        named_template = None
-        if (request.GET.get('action') and (request.GET.get('action') == ('receive' or 'draft'))):
-            # For post requests, the template we will include depends on what the user is attempting to do.
-            named_template = 'receive_batch_items.html'
-        context = self.get_context_data(named_template=named_template)
-        return self.render_to_response(context)
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ReceiveView, self).dispatch(*args, **kwargs)
 
     def get(self, request):
-        # For get requests, its safe to assume the user will always be trying to receive a batch
         named_template = 'receive_batch_items.html'
         context = self.get_context_data(named_template=named_template)
         return self.render_to_response(context)
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ReceiveView, self).dispatch(*args, **kwargs)
+    def post(self, request):
+        named_template = None
+        if (request.GET.get('action') and (request.GET.get('action') == ('receive' or 'draft'))):
+            named_template = 'receive_batch_items.html'
+        context = self.get_context_data(named_template=named_template)
+        return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -72,19 +68,3 @@ class ReceiveView(TemplateView):
             received_count=Receive.objects.all().count()
         )
         return context
-
-#     def get(self, request):
-#         batch = Batch.objects.filter(user_created=request.user.username)
-#         context = self.get_context_data()
-#         context.update(
-#             batch,
-#             header=[
-#                 'Batch Identifier',
-#                 'Item Count',
-#                 'Status',
-#                 'Protocol Number',
-#                 'Site Code'
-#             ],
-#             named_template='my_batch.html'
-#         )
-#         return self.render_to_response(context)

@@ -14,31 +14,19 @@ class BatchItem(BaseUuidModel):
 
     patient = models.ForeignKey(
         Patient,
-        null=True,
-        blank=True,
     )
 
     receive_datetime = models.DateTimeField(
         default=timezone.now,
-        null=True,
-        blank=True,
     )
 
     specimen_reference = models.CharField(
         max_length=25,
-        null=True,
-        blank=True,
     )
 
-    collection_date = models.DateField(
-        null=True,
-        blank=True,
-    )
+    collection_date = models.DateField()
 
-    collection_time = models.TimeField(
-        null=True,
-        blank=True,
-    )
+    collection_time = models.TimeField()
 
     protocol_number = models.CharField(
         verbose_name='Protocol',
@@ -54,15 +42,12 @@ class BatchItem(BaseUuidModel):
         blank=True,
     )
 
-    specimen_condition = models.IntegerField(
-        null=True,
-        blank=True,
-    )
+    sample_type = models.CharField(max_length=2)
 
-    sample_type = models.CharField(
+    specimen_condition = models.CharField(
         max_length=2,
         null=True,
-        blank=True,
+        blank=True
     )
 
     site_code = models.CharField(
@@ -71,10 +56,7 @@ class BatchItem(BaseUuidModel):
         blank=True,
     )
 
-    tube_count = models.IntegerField(
-        null=True,
-        blank=True,
-    )
+    tube_count = models.IntegerField()
 
     class Meta:
         app_label = "getresults_receive"

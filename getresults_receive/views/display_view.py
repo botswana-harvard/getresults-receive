@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
 from ..models import Batch, BatchItem
@@ -44,6 +46,10 @@ class Option(object):
 
 
 class DisplayView(TemplateView):
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(DisplayView, self).dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.template_name = kwargs.get('template_name')

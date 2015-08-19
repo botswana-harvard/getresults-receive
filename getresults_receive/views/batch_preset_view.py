@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
 from ..forms import BatchForm
@@ -6,8 +8,9 @@ from ..forms import BatchForm
 class BatchPresetView(TemplateView):
     template_name = 'receive.html'
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(BatchPresetView, self).dispatch(*args, **kwargs)
 
     def get(self, request, **kwargs):
         context = self.get_context_data()
@@ -23,13 +26,14 @@ class BatchPresetView(TemplateView):
             sample_type = form.cleaned_data.get('sample_type')
             protocol_no = form.cleaned_data.get('protocol_no')
             site_code = form.cleaned_data.get('site_code')
-            context.update(collection_date_name=collection_date.strftime("%Y-%m-%d") if collection_date else '',
-                           sample_type_name=sample_type,
-                           protocol_no_name=protocol_no,
-                           site_code_name=site_code,
-                           batch_size=range(0, item_count),
-                           named_template='receive_batch_items.html'
-                           )
+            context.update(
+                collection_date_name=collection_date.strftime("%Y-%m-%d") if collection_date else '',
+                sample_type_name=sample_type,
+                protocol_no_name=protocol_no,
+                site_code_name=site_code,
+                batch_size=range(0, item_count),
+                named_template='receive_batch_items.html'
+            )
             return self.render_to_response(context)
         else:
             raise

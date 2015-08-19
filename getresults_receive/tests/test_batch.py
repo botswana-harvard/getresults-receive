@@ -1,4 +1,6 @@
-from datetime import datetime, date
+import random
+
+from datetime import datetime
 
 from django.test.testcases import TransactionTestCase
 from django.utils import timezone
@@ -8,183 +10,105 @@ from getresults_patient.models import Patient
 from ..batch_helper import BatchError, BatchHelper
 
 from ..models import Batch, BatchItem, Receive
+from getresults_receive.constants import OPEN, RECEIVED, SAVED
+from getresults_receive.exceptions import AlreadyReceivedError, BatchDuplicateItemError
 
 
 class TestBatch(TransactionTestCase):
 
-    def test_create_batch(self):
-        """Test that a batch identifier is assigned when batch created"""
-        batch = Batch.objects.create()
-        prefix = datetime.today().strftime('%Y%m%d')
-        self.assertTrue(batch.batch_identifier.startswith(prefix))
+    def setUp(self):
+        self.batch = Batch.objects.create(
+            item_count=3,
+            specimen_condition='OK',
+            sample_type='WB')
+        self.patient = Patient.objects.create(registration_datetime=timezone.now())
 
-    def test_update_batch_identifier(self):
-        """Test that a batch identifier is unique"""
-        batch = Batch.objects.create()
-        batch_id = batch.batch_identifier
-        batch.save()
-        self.assertEqual(batch_id, batch.batch_identifier)
+    def random_string(self, length):
+        return ''.join([random.choice('ABCDEFGHIJKLMNOPQRTUVWZYZ123456789') for _ in range(length)])
+
+    def new_batch_item_instance(self, batch=None, patient=None):
+        return BatchItem(
+            batch=batch or self.batch,
+            patient=patient or self.patient,
+            protocol_number='BHP000',
+            clinician_initials='MM',
+            specimen_reference=self.random_string(10),
+            specimen_condition='OK',
+            collection_date=timezone.now(),
+            collection_time=timezone.now(),
+            tube_count=1,
+        )
+
+    def test_create_batch_identifier(self):
+        """Test that a batch identifier is assigned when batch created"""
+        prefix = datetime.today().strftime('%Y%m%d')
+        self.assertTrue(self.batch.batch_identifier.startswith(prefix))
+
+    def test_update_batch_no_change_identifier(self):
+        """Test that a batch identifier does not change on update"""
+        batch_id = self.batch.batch_identifier
+        self.batch.save()
+        self.assertEqual(batch_id, self.batch.batch_identifier)
+
+    def test_batchitem_duplicate_raises(self):
+        self.batch.item_count = 2
+        items = []
+        items.append(self.new_batch_item_instance())
+        items.append(self.new_batch_item_instance())
+        batch_helper = BatchHelper(self.batch)
+        self.assertRaises(BatchDuplicateItemError, batch_helper.save, items)
 
     def test_batchitem_count_raises(self):
-        batch = Batch.objects.create(item_count=3, sample_type='WB')
-        patient = Patient.objects.create(registration_datetime=timezone.now())
         items = []
-        items.append(BatchItem(batch=batch, patient=patient))
-        items.append(BatchItem(batch=batch, patient=patient))
-        batch_helper = BatchHelper(batch)
-        self.assertRaises(BatchError, batch_helper.add, items)
-
-    def test_batchitem_count(self):
-        batch = Batch.objects.create(item_count=3, sample_type='WB')
-        patient = Patient.objects.create(registration_datetime=timezone.now())
-        items = []
-        items.append(BatchItem(batch=batch, patient=patient))
-        items.append(BatchItem(batch=batch, patient=patient))
-        batch_helper = BatchHelper(batch)
-        self.assertRaises(BatchError, batch_helper.add, items)
-
-    def test_batchitem_save_raises(self):
-        batch = Batch.objects.create(item_count=3, sample_type='WB')
-        items = []
-        for _ in range(3):
-            batch_item = BatchItem(
-            )
+        for _ in range(4):
+            batch_item = self.new_batch_item_instance()
             items.append(batch_item)
         self.assertEqual(BatchItem.objects.all().count(), 0)
-        batch_helper = BatchHelper(batch)
-        self.assertRaises(BatchError, batch_helper.add, items)
+        batch_helper = BatchHelper(self.batch)
+        self.assertRaises(BatchError, batch_helper.save, items)
         self.assertEqual(BatchItem.objects.all().count(), 0)
 
-    def test_receive_save_ok(self):
-        batch = Batch.objects.create(item_count=3, sample_type='WB')
-        patient = Patient.objects.create(registration_datetime=timezone.now())
+    def test_batch_receive_save(self):
         items = []
         for _ in range(3):
-            receive = Receive(
-                batch=batch,
-                patient=patient,
-                receive_datetime=datetime.today(),
-                collection_date=date.today(),
-                collection_time=datetime.today().now(),
-                protocol_number='BHP080',
-                clinician_initials='XM',
-                specimen_condition='10',
-                sample_type='WB',
-                site_code='02',
-                tube_count=1,
-            )
-            items.append(receive)
-        self.assertEqual(Receive.objects.filter(batch=batch).count(), 0)
-        BatchHelper(batch).savedraft_batch(items)
-        self.assertEqual(Receive.objects.filter(batch=batch).count(), 3)
+            items.append(self.new_batch_item_instance())
+        batch_item = BatchHelper(self.batch)
+        batch_item.save(items)
+        self.assertEqual(BatchItem.objects.filter(batch=self.batch).count(), 3)
+        batch_item.receive()
+        self.assertEqual(Receive.objects.filter(batch=self.batch).count(), 3)
 
-    def test_receive_save_raises(self):
-        batch = Batch.objects.create(item_count=3, sample_type='WB')
+    def test_save_batch(self):
         items = []
         for _ in range(3):
-            receive = Receive(
-                batch=batch,
-            )
-            items.append(receive)
-        self.assertEqual(Receive.objects.filter(batch=batch).count(), 0)
-        batch_helper = BatchHelper(batch)
-        self.assertRaises(BatchError, batch_helper.savedraft_batch, items)
-        self.assertEqual(Receive.objects.filter(batch=batch).count(), 0)
+            items.append(self.new_batch_item_instance())
+        batch_helper = BatchHelper(self.batch)
+        batch_helper.save(items)
+        self.assertEqual(BatchItem.objects.filter(batch=self.batch).count(), 3)
 
-    def test_savedraft_batch(self):
-        batch = Batch.objects.create(item_count=3, sample_type='WB')
-        patient = Patient.objects.create(registration_datetime=timezone.now())
+    def test_save_batch_already_received(self):
+        self.batch.status = RECEIVED
+        self.batch.save()
         items = []
-        for n in range(3):
-            batch_item = BatchItem(
-                batch=batch,
-                patient=patient,
-                specimen_reference=str(n),
-            )
-            items.append(batch_item)
-        BatchHelper(batch).savedraft_batch(items)
-        self.assertEqual(Receive.objects.filter(batch=batch).count(), 0)
-        self.assertEqual(BatchItem.objects.filter(batch=batch).count(), 3)
+        for _ in range(3):
+            items.append(self.new_batch_item_instance())
+        batch_helper = BatchHelper(self.batch)
+        self.assertRaises(AlreadyReceivedError, batch_helper.save, items)
 
-    def test_savereceive_batch_fail(self):
-        batch = Batch.objects.create(item_count=3, sample_type='WB')
-        patient = Patient.objects.create(registration_datetime=timezone.now())
+    def test_batch_status_open(self):
+        self.assertEqual(self.batch.status, OPEN)
         items = []
         for _ in range(3):
-            receive = Receive(
-                patient=patient,
-            )
-            items.append(receive)
-        batch_helper = BatchHelper(batch)
-        self.assertRaises(BatchError, batch_helper.receive_batch, items)
-        self.assertEqual(Receive.objects.filter(batch=batch).count(), 0)
-        self.assertEqual(BatchItem.objects.filter(batch=batch).count(), 3)
+            items.append(self.new_batch_item_instance())
+        batch_helper = BatchHelper(self.batch)
+        batch_helper.save(items)
+        self.assertEqual(self.batch.status, SAVED)
 
-    def test_receivebatch_status_open(self):
-        batch = Batch.objects.create(item_count=3, sample_type='WB')
-        patient = Patient.objects.create(registration_datetime=timezone.now())
+    def test_batch_status_received(self):
         items = []
         for _ in range(3):
-            receive = Receive(
-                patient=patient,
-            )
-            items.append(receive)
-        batch_helper = BatchHelper(batch)
-        self.assertRaises(BatchError, batch_helper.receive_batch, items)
-        self.assertEqual(batch.status, "Open")
-    
-    def test_batch_status_closed(self):
-        batch = Batch.objects.create(item_count=3, sample_type='WB')
-        patient = Patient.objects.create(registration_datetime=timezone.now())
-        items = []
-        for _ in range(3):
-            receive = Receive(
-                batch=batch,
-                patient=patient,
-                receive_datetime=datetime.today(),
-                collection_date=date.today(),
-                collection_time=datetime.today().now(),
-                protocol_number='BHP080',
-                clinician_initials='XM',
-                specimen_condition='10',
-                sample_type='WB',
-                site_code='02',
-                tube_count=1,
-            )
-            items.append(receive)
-        BatchHelper(batch).receive_batch(items)
-        self.assertEqual(batch.status, "Closed")
-    
-    def test_receive_saveddraft(self):
-        batch = Batch.objects.create(item_count=3, sample_type='WB')
-        patient = Patient.objects.create(registration_datetime=timezone.now())
-        items = []
-        for n in range(3):
-            batch_item = BatchItem(
-                batch=batch,
-                patient=patient,
-                specimen_reference=str(n),
-            )
-            items.append(batch_item)
-        BatchHelper(batch).savedraft_batch(items)
-        receive_items = []
-        batch_items = BatchItem.objects.filter(batch=batch)
-        for item in batch_items:
-            receive = Receive(
-                batch=item.batch,
-                patient=item.patient,
-                specimen_reference=item.specimen_reference,
-                receive_datetime=datetime.today(),
-                collection_date=date.today(),
-                collection_time=datetime.today().now(),
-                protocol_number='BHP080',
-                clinician_initials='XD',
-                specimen_condition='10',
-                sample_type='WB',
-                site_code='02',
-                tube_count=1,
-            )
-            receive_items.append(receive)
-        BatchHelper(batch).receive_batch(receive_items)
-        self.assertEqual(Receive.objects.filter(batch=batch).count(), 3)
-        self.assertEqual(BatchItem.objects.filter(batch=batch).count(), 0)
+            items.append(self.new_batch_item_instance())
+        batch_helper = BatchHelper(self.batch)
+        batch_helper.save(items)
+        batch_helper.receive()
+        self.assertEqual(self.batch.status, RECEIVED)

@@ -8,7 +8,7 @@
             <th>{{head}}</th>
         {% endfor %}
       </tr>
-      {% for batch_item in batch_received %}
+      {% for batch_item in batch_items %}
         <tr>
           <td>{{batch_item.patient.patient_identifier}}</a></td>
           <td>{{batch_item.receive_datetime}}</td>

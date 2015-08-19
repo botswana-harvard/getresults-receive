@@ -36,16 +36,19 @@ class ReceiveView(TemplateView):
         if (request.GET.get('action') and (request.GET.get('action') == ('receive' or 'draft'))):
 
             if request.POST.get('action') == 'receive':
-                batch_items_list = self.batch_items_list_post(request)
-                if not self.validate_batch_items(batch_items_list):
+                batch_items = self.batch_items_data(request)
+                if not self.validate_batch_items(batch_items):
                     named_template = 'receive_batch_items.html'
-                    forms = self.batch_item_form_list(batch_items_list)
+                    forms = [BatchItemForm(**data) for data in batch_items]
                     context.update(batch_item_forms=forms)
                     context.update(batch_item_status=True)
                     context.update(batch_preset=False)
                 else:
-                    self.save_valid_batch_items(request.POST.get('patient_identifier'),
-                                                self.batch_items_list_post(request))
+                    saving_status = self.save_valid_batch_items(
+                        request.POST.get('batch_identifier'),
+                        self.batch_items(self.batch_items_data(request))
+                    )
+                    context.update(message=saving_status)
                     context.update(named_template=named_template)
         return self.render_to_response(context)
 
@@ -93,46 +96,52 @@ class ReceiveView(TemplateView):
         field_data = request.POST.getlist(field, None)
         return field_data[index] if field_data else None
 
-    def batch_items_list_post(self, request):
-        batch_items_list = []
+    def batch_items_data(self, request):
+        batch_items_data = []
         for i in range(len(request.POST.getlist('patient_name', []))):
             form_field = ['patient_name', 'collect_datetime', 'rec_datetime_name', 'sample_type_name',
                           'protocol_no_name', 'site_code_name']
             _batch_items_list = []
             for field in form_field:
                 _batch_items_list.append(self.field_data(i, request, field))
-            batch_items_list.append(
+            batch_items_data.append(
                 dict(
                     patient=_batch_items_list[0], collection_datetime=_batch_items_list[1],
                     receive_datetime=_batch_items_list[2], sample_type=_batch_items_list[3],
                     protocol_number=_batch_items_list[4], site_code=_batch_items_list[5]
                 )
             )
-        return batch_items_list
+        return batch_items_data
 
-    def batch_items(self, batch_items_list):
+    def batch_items(self, batch_items_data):
         """ """
         batch_items = []
-        for batch_item_data in batch_items_list:
-            batch_item_data.update({'patient': self.patient(batch_item_data.get('patient'))})
-            batch_item = BatchItem.objects.create(**batch_item_data)
+        for batch_item_data in batch_items_data:
+            patient_instance = self.patient(batch_item_data.get('patient'))
+            batch_instance = self.batch(batch_item_data.get('batch'))
+            batch_item_data.pop('patient')
+            batch_item_data.pop('batch')
+            batch_item_data.update(patient=patient_instance)
+            batch_item_data.update(batch=batch_instance)
+            batch_item = BatchItem(**batch_item_data)
             batch_items.append(batch_item)
         return batch_items
 
-    def save_valid_batch_items(self, batch_identifier, batch_items_list):
+    def save_valid_batch_items(self, batch_identifier, batch_items_data):
         batch_helper = BatchHelper(self.batch(batch_identifier))
-        message = "{} Batch items successfully added".format(len(batch_items_list))
+        message = "{} Batch items successfully added".format(len(batch_items_data))
         try:
-            batch_helper.receive_batch(batch_items_list)
+            batch_helper.save(batch_items_data)
         except BatchError as message:
             return message
         return message
 
     def patient(self, patient_identifier):
+        patient = None
         try:
             patient = Patient.objects.get(patient_identifier=patient_identifier)
         except Patient.DoesNotExist:
-            pass
+            patient = Patient.objects.get(id=patient_identifier)
         return patient
 
     def validate_batch_items(self, batch_form_data):
@@ -146,5 +155,5 @@ class ReceiveView(TemplateView):
         try:
             batch = Batch.objects.get(batch_identifier=batch_identifier)
         except Batch.DoesNotExist:
-            return Batch.objects.first()  # for development purpose only.
+            batch = Batch.objects.get(id=batch_identifier)
         return batch

@@ -31,6 +31,12 @@ class Batch(BaseUuidModel):
         blank=True
     )
 
+    specimen_condition = models.CharField(
+        max_length=2,
+        null=True,
+        blank=True
+    )
+
     site_code = models.CharField(
         max_length=2,
         null=True,

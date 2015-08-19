@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 
 from edc_base.model.models import BaseUuidModel
 
@@ -14,10 +13,6 @@ class BatchItem(BaseUuidModel):
 
     patient = models.ForeignKey(
         Patient,
-    )
-
-    receive_datetime = models.DateTimeField(
-        default=timezone.now,
     )
 
     specimen_reference = models.CharField(

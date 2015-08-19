@@ -2,7 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from django.db import models
-# from django.db.models import get_model
+from django.db.models import get_model
 from django.utils import timezone
 
 from edc_base.model.models import BaseUuidModel, HistoricalRecords
@@ -82,23 +82,31 @@ class Receive(BaseUuidModel):
         unique_together = (
             ('protocol_number', 'patient', 'collection_date', 'collection_time', 'sample_type', 'tube_count', ))
 
-#     def create_aliquot(self, instance):
-#         """Create an aliquote."""
-#         aliquot_model = get_model('getresults_aliquot', 'Aliquot')
-#         try:
-#             aliquot_model.objects.create(
-#                 receive=instance
-#             )
-#         except:
-#             pass
+    def create_aliquot(self, instance):
+        """Create an aliquote."""
+        aliquot_model = get_model('getresults_aliquot', 'Aliquot')
+        aliquot_type_model = get_model('getresults_aliquot', 'AliquotType')
+        # Aliquote type will be queried by sample type on receive
+        if aliquot_type_model.objects.filter(name='whole blood', alpha_code='WB', numeric_code='02').exists():
+            aliquot_type = aliquot_type_model.objects.get(name='whole blood', alpha_code='WB', numeric_code='02')
+        else:
+            aliquot_type = aliquot_type_model.objects.create(name='whole blood', alpha_code='WB', numeric_code='02')
+        try:
+            aliquot_model.objects.create(
+                receive=instance,
+                aliquot_type=aliquot_type
+            )
+        except:
+            pass
 
 
 @receiver(post_save, weak=False, dispatch_uid='create_aliquot_on_post_save')
 def create_aliquot_on_post_save(sender, instance, raw, created, using, **kwargs):
     """Creates and aliquot after a sample is received."""
     if not raw:
-        if created:
-            try:
-                instance.create_aliquot(instance)
-            except AttributeError:
-                pass
+        if isinstance(instance, Receive):
+            if created:
+                try:
+                    instance.create_aliquot(instance)
+                except AttributeError:
+                    pass

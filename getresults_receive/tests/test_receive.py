@@ -109,11 +109,4 @@ class TestReceive(TestCase):
         self.assertEqual(self.receive.receive_identifier, receive_identifier)
 
     def test_create_aliquot(self):
-        receive = Receive.objects.create(
-            batch=self.batch,
-            patient=self.patient,
-            tube_count=1,
-            specimen_condition='10',
-            collection_date=timezone.now().date(),
-            collection_time=timezone.now().time())
-        self.assertIsInstance(Aliquot.objects.get(receive=receive), Aliquot)
+        self.assertIsInstance(Aliquot.objects.get(receive=self.receive), Aliquot)

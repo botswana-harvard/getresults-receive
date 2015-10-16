@@ -26,16 +26,16 @@
 						<input type="text" class="form-control" id="item_count_input_id" name="item_count" placeholder="Number of Samples">
 					</div>
 					<div class="form-group">
-						<label for="collection_date"></label>
-						<input type="text" class="form-control" id="collection_date_input_id" name="collection_date" placeholder="Collection Date">
+						<label for="collection_datetime"></label>
+						<input type="text" class="form-control" id="collection_datetime_input_id" name="collection_datetime" placeholder="Collection Date/Time">
 					</div>
 					<div class="form-group">
-						<label for="sample_type"></label>
-						<input type="text" class="form-control" id="sample_type_input_id" name="sample_type" placeholder="Sample Type">
+						<label for="specimen_type"></label>
+						<input type="text" class="form-control" id="specimen_type_input_id" name="specimen_type" placeholder="Sample Type">
 					</div>
 					<div class="form-group">
 						<label for="protocol_number"></label>
-						<input type="text" class="form-control" id="protocol_number_input_id" name="protocol_no" placeholder="Protocol Number">
+						<input type="text" class="form-control" id="protocol_number_input_id" name="protocol_number" placeholder="Protocol Number">
 					</div>
 					<div class="form-group">
 						<label for="protocol_number"></label>
@@ -84,19 +84,19 @@
 					    </div>
 					    <div class="col-sm-2">
 					    	<label for="rec_datetime"></label>
-	                        <input type="text" onfocus="(this.type='date')" class="form-control" id="collection_date_id" name="collection_date_name" value="{{collection_date_name}}" placeholder="Collection Date" {% if collection_date_name %}readonly{% endif %}>
+	                        <input type="text" onfocus="(this.type='date')" class="form-control" id="collection_datetime_id" name="collection_datetime_name" value="{{collection_datetime_name}}" placeholder="Collection Date/Time" {% if collection_datetime_name %}readonly{% endif %}>
 					    </div>
 					    <div class="col-sm-2">
-					    	<label for="sample_type"></label>
-	                        <input type="text" class="form-control" id="sample_type_id" name="sample_type_name" value="{{sample_type_name}}" placeholder="Sample Type" {% if sample_type_name %}readonly{% endif %}>
+					    	<label for="specimen_type"></label>
+	                        <input type="text" class="form-control" id="specimen_type_id" name="specimen_type_name" value="{{specimen_type_name}}" placeholder="Sample Type" {% if specimen_type_name %}readonly{% endif %}>
 					    </div>
 					    <div class="col-sm-2">
-					    	<label for="sample_type"></label>
+					    	<label for="specimen_type"></label>
 	                        <input type="text" class="form-control" id="site_code_id" name="site_code_name" value="{{site_code_name}}" placeholder="Site Code" {% if site_code_name %}readonly{% endif %}>
 					    </div>
 					    <div class="col-sm-2">
-					    	<label for="protocol_no"></label>
-	                        <input type="text" class="form-control" id="protocol_no_id" name="protocol_no_name" value="{{protocol_no_name}}" placeholder="Protocol Number" {% if protocol_no_name %}readonly{% endif %}>
+					    	<label for="protocol_number"></label>
+	                        <input type="text" class="form-control" id="protocol_number_id" name="protocol_number" value="{{protocol_number}}" placeholder="Protocol Number" {% if protocol_number %}readonly{% endif %}>
 					    </div>
 					    <div class="col-sm-1">
 					    	<div class="checkbox">
@@ -118,17 +118,17 @@
 					    	<label for="rec_datetime">{{form.receive_datetime.errors.0}}</label>
 	                        <input type="datetime" class="form-control" id="rec_datetime_id" name="rec_datetime_name" placeholder="Receive Datetime" value="{{form.data.receive_datetime}}">
 					    </div>
-					    <div class="col-sm-2 {% if form.sample_type.errors.0 %} has-error {% endif %}">
-					    	<label for="sample_type">{{form.sample_type.errors.0}}</label>
-	                        <input type="text" class="form-control" id="sample_type_id" name="sample_type_name" value="{{form.data.sample_type}}" placeholder="Sample Type" {% if sample_type_name %}readonly{% endif %}>
+					    <div class="col-sm-2 {% if form.specimen_type.errors.0 %} has-error {% endif %}">
+					    	<label for="specimen_type">{{form.specimen_type.errors.0}}</label>
+	                        <input type="text" class="form-control" id="specimen_type_id" name="specimen_type_name" value="{{form.data.specimen_type}}" placeholder="Sample Type" {% if specimen_type_name %}readonly{% endif %}>
 					    </div>
 					    <div class="col-sm-2 {% if form.site_code.errors.0 %} has-error {% endif %}">
 					    	<label for="site_code_name">{{form.site_code.errors.0}}</label>
 	                        <input type="text" class="form-control" id="site_code_id" name="site_code_name" value="{{form.data.site_code}}" placeholder="Site Code" {% if site_code_name %}readonly{% endif %}>
 					    </div>
 					    <div class="col-sm-2 {% if form.protocol_number.errors.0 %} has-error {% endif %}">
-					    	 <label for="protocol_no">{% if form.protocol_number.errors %} <strong style="margin-button:0;">At most 6 characters.</strong>{%endif%}</label>
-	                        <input type="text" class="form-control" id="protocol_no_id" name="protocol_no_name" value="{{form.data.protocol_number}}" placeholder="Protocol Number" {% if protocol_no_name %}readonly{% endif %}>
+					    	 <label for="protocol_number">{% if form.protocol_number.errors %} <strong style="margin-button:0;">At most 6 characters.</strong>{%endif%}</label>
+	                        <input type="text" class="form-control" id="protocol_number_id" name="protocol_number" value="{{form.data.protocol_number}}" placeholder="Protocol Number" {% if protocol_number %}readonly{% endif %}>
 					    	<!--<span class="glyphicon glyphicon-remove form-control-feedback"></span>-->
 					    </div>
 					    <div class="col-sm-1">
@@ -154,10 +154,10 @@
 				$("#inline_form_id").attr('action', location.protocol + '//' + location.host + '/receive/?action=draft');
 				$("#inline_form_id").submit();
 			});
-			$('#collection_date_input_id').focus(function (){
+			$('#collection_datetime_input_id').focus(function (){
 				$(this).attr('type', 'date');
 			});
-			$('#collection_date_id').focus(function (){
+			$('#collection_datetime_id').focus(function (){
 				$(this).attr('type', 'date');
 			});
 			$( window ).load(function() {

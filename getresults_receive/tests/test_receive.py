@@ -1,11 +1,9 @@
-from django.db.models import get_model
 from django.test.testcases import TestCase
 from django.utils import timezone
 from django.db import IntegrityError
 
 from getresults_patient.models import Patient
 from getresults_receive.models import Receive, Batch
-from getresults_aliquot.models import Aliquot
 from getresults_identifier.models import IdentifierHistory
 
 
@@ -20,11 +18,9 @@ class TestReceive(TestCase):
         self.batch = Batch.objects.create()
         self.receive = Receive.objects.create(
             patient=self.patient,
-            batch=self.batch,
             tube_count=1,
             specimen_condition='10',
-            collection_date=timezone.now().date(),
-            collection_time=timezone.now().time())
+            collection_datetime=timezone.now())
 
     def test_creates_identifier(self):
         self.assertEqual(self.receive.receive_identifier, 'AAA00015')
@@ -39,43 +35,33 @@ class TestReceive(TestCase):
         self.assertEqual(self.receive.receive_identifier, 'AAA00015')
         receive = Receive.objects.create(
             patient=self.patient,
-            batch=self.batch,
             specimen_condition='10',
             tube_count=1,
-            collection_date=timezone.now().date(),
-            collection_time=timezone.now().time())
+            collection_datetime=timezone.now())
         self.assertEqual(receive.receive_identifier, 'AAA00023')
         receive = Receive.objects.create(
             patient=self.patient,
-            batch=self.batch,
             tube_count=1,
             specimen_condition='10',
-            collection_date=timezone.now().date(),
-            collection_time=timezone.now().time())
+            collection_datetime=timezone.now())
         self.assertEqual(receive.receive_identifier, 'AAA00031')
         receive = Receive.objects.create(
             patient=self.patient,
-            batch=self.batch,
             tube_count=1,
             specimen_condition='10',
-            collection_date=timezone.now().date(),
-            collection_time=timezone.now().time())
+            collection_datetime=timezone.now())
         self.assertEqual(receive.receive_identifier, 'AAA00049')
         receive = Receive.objects.create(
             patient=self.patient,
-            batch=self.batch,
             tube_count=1,
             specimen_condition='10',
-            collection_date=timezone.now().date(),
-            collection_time=timezone.now().time())
+            collection_datetime=timezone.now())
         self.assertEqual(receive.receive_identifier, 'AAA00057')
         receive = Receive.objects.create(
             patient=self.patient,
-            batch=self.batch,
             tube_count=1,
             specimen_condition='10',
-            collection_date=timezone.now().date(),
-            collection_time=timezone.now().time())
+            collection_datetime=timezone.now())
         self.assertEqual(receive.receive_identifier, 'AAA00065')
 
     def test_receive_identifier_history(self):
@@ -84,11 +70,9 @@ class TestReceive(TestCase):
             IdentifierHistory)
         receive = Receive.objects.create(
             patient=self.patient,
-            batch=self.batch,
             tube_count=1,
             specimen_condition='10',
-            collection_date=timezone.now().date(),
-            collection_time=timezone.now().time())
+            collection_datetime=timezone.now())
         self.assertIsInstance(
             IdentifierHistory.objects.get(identifier=receive.receive_identifier),
             IdentifierHistory)
@@ -97,7 +81,8 @@ class TestReceive(TestCase):
         self.assertRaises(
             IntegrityError, Receive.objects.create,
             receive_identifier=self.receive.receive_identifier,
-            patient=self.patient)
+            patient=self.patient,
+            collection_datetime=timezone.now())
 
     def test_receive_edit(self):
         receive_identifier = self.receive.receive_identifier
@@ -107,6 +92,3 @@ class TestReceive(TestCase):
             IdentifierHistory.objects.get(identifier=self.receive.receive_identifier),
             IdentifierHistory)
         self.assertEqual(self.receive.receive_identifier, receive_identifier)
-
-    def test_create_aliquot(self):
-        self.assertIsInstance(Aliquot.objects.get(receive=self.receive), Aliquot)

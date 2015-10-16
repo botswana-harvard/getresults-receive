@@ -26,15 +26,15 @@ class BatchPresetView(TemplateView):
         if form.is_valid():
             item_count = form.cleaned_data.get('item_count')
             collection_date = form.cleaned_data.get('collection_date')
-            sample_type = form.cleaned_data.get('sample_type')
-            protocol_no = form.cleaned_data.get('protocol_no')
+            specimen_type = form.cleaned_data.get('specimen_type')
+            protocol_number = form.cleaned_data.get('protocol_number')
             site_code = form.cleaned_data.get('site_code')
             batch = None
             try:
                 batch = Batch(
                     item_count=item_count,
-                    sample_type=sample_type,
-                    protocol_number=protocol_no,
+                    specimen_type=specimen_type,
+                    protocol_number=protocol_number,
                     site_code=site_code,
                     user_created=request.user.username,
                 )
@@ -44,8 +44,8 @@ class BatchPresetView(TemplateView):
                 batch = Batch.objects.first()
             context.update(
                 collection_date_name=collection_date.strftime("%Y-%m-%d") if collection_date else '',
-                sample_type_name=sample_type,
-                protocol_no_name=protocol_no,
+                specimen_type_name=specimen_type,
+                protocol_number=protocol_number,
                 site_code_name=site_code,
                 batch_size=range(0, item_count),
                 named_template='receive_batch_items.html',

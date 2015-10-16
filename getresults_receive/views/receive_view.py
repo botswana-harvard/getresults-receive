@@ -7,9 +7,9 @@ from ..models import Receive, Batch
 
 from getresults_patient.models import Patient
 
+from ..exceptions import BatchError
 from ..forms import BatchItemForm
 from ..models import BatchItem
-from ..batch_helper import BatchHelper, BatchError
 
 
 class Option(object):
@@ -99,15 +99,15 @@ class ReceiveView(TemplateView):
     def batch_items_data(self, request):
         batch_items_data = []
         for i in range(len(request.POST.getlist('patient_name', []))):
-            form_field = ['patient_name', 'collect_datetime', 'rec_datetime_name', 'sample_type_name',
-                          'protocol_no_name', 'site_code_name']
+            form_field = ['patient_name', 'collect_datetime', 'rec_datetime_name', 'specimen_type_name',
+                          'protocol_number', 'site_code_name']
             _batch_items_list = []
             for field in form_field:
                 _batch_items_list.append(self.field_data(i, request, field))
             batch_items_data.append(
                 dict(
                     patient=_batch_items_list[0], collection_datetime=_batch_items_list[1],
-                    receive_datetime=_batch_items_list[2], sample_type=_batch_items_list[3],
+                    receive_datetime=_batch_items_list[2], specimen_type=_batch_items_list[3],
                     protocol_number=_batch_items_list[4], site_code=_batch_items_list[5]
                 )
             )
@@ -128,13 +128,12 @@ class ReceiveView(TemplateView):
         return batch_items
 
     def save_valid_batch_items(self, batch_identifier, batch_items_data):
-        batch_helper = BatchHelper(self.batch(batch_identifier))
-        message = "{} Batch items successfully added".format(len(batch_items_data))
+        batch = Batch.objects.get(batch_identifier=batch_identifier)
         try:
-            batch_helper.save(batch_items_data)
-        except BatchError as message:
-            return message
-        return message
+            batch.save_batch_items(batch_items_data)
+        except BatchError as e:
+            return str(e)
+        return "{} Batch items successfully added".format(len(batch_items_data))
 
     def patient(self, patient_identifier):
         patient = None

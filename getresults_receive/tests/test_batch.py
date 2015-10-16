@@ -6,12 +6,10 @@ from django.test.testcases import TransactionTestCase
 from django.utils import timezone
 
 from getresults_patient.models import Patient
-
-from ..batch_helper import BatchError, BatchHelper
-
+from ..exceptions import BatchError
 from ..models import Batch, BatchItem, Receive
 from getresults_receive.constants import OPEN, RECEIVED, SAVED
-from getresults_receive.exceptions import AlreadyReceivedError, BatchDuplicateItemError
+from getresults_receive.exceptions import AlreadyReceivedError, BatchDuplicateItemError, BatchSaveError
 
 
 class TestBatch(TransactionTestCase):
@@ -20,22 +18,20 @@ class TestBatch(TransactionTestCase):
         self.batch = Batch.objects.create(
             item_count=3,
             specimen_condition='OK',
-            sample_type='WB')
+            specimen_type='WB')
         self.patient = Patient.objects.create(registration_datetime=timezone.now())
 
     def random_string(self, length):
         return ''.join([random.choice('ABCDEFGHIJKLMNOPQRTUVWZYZ123456789') for _ in range(length)])
 
-    def new_batch_item_instance(self, batch=None, patient=None):
+    def new_batch_item_instance(self, batch=None, patient=None, collection_datetime=None):
         return BatchItem(
             batch=batch or self.batch,
             patient=patient or self.patient,
             protocol_number='BHP000',
             clinician_initials='MM',
-            specimen_reference=self.random_string(10),
             specimen_condition='OK',
-            collection_date=timezone.now(),
-            collection_time=timezone.now(),
+            collection_datetime=collection_datetime or timezone.now(),
             tube_count=1,
         )
 
@@ -51,64 +47,66 @@ class TestBatch(TransactionTestCase):
         self.assertEqual(batch_id, self.batch.batch_identifier)
 
     def test_batchitem_duplicate_raises(self):
-        self.batch.item_count = 2
+        batch = self.batch
+        batch.item_count = 2
         items = []
-        items.append(self.new_batch_item_instance())
-        items.append(self.new_batch_item_instance())
-        batch_helper = BatchHelper(self.batch)
-        self.assertRaises(BatchDuplicateItemError, batch_helper.save, items)
+        collection_datetime = timezone.now()
+        items.append(self.new_batch_item_instance(batch, collection_datetime=collection_datetime))
+        items.append(self.new_batch_item_instance(batch, collection_datetime=collection_datetime))
+        self.assertRaises(BatchSaveError, self.batch.save_batch_items, items)
 
     def test_batchitem_count_raises(self):
         items = []
+        batch = self.batch
         for _ in range(4):
-            batch_item = self.new_batch_item_instance()
+            batch_item = self.new_batch_item_instance(batch)
             items.append(batch_item)
         self.assertEqual(BatchItem.objects.all().count(), 0)
-        batch_helper = BatchHelper(self.batch)
-        self.assertRaises(BatchError, batch_helper.save, items)
+        self.assertRaises(BatchError, batch.save_batch_items, items)
         self.assertEqual(BatchItem.objects.all().count(), 0)
 
     def test_batch_receive_save(self):
         items = []
+        batch = self.batch
         for _ in range(3):
-            items.append(self.new_batch_item_instance())
-        batch_item = BatchHelper(self.batch)
-        batch_item.save(items)
+            items.append(self.new_batch_item_instance(batch))
+        batch.save_batch_items(items)
         self.assertEqual(BatchItem.objects.filter(batch=self.batch).count(), 3)
-        batch_item.receive()
-        self.assertEqual(Receive.objects.filter(batch=self.batch).count(), 3)
+        batch.receive_batch_items()
+        receive_identifiers = batch.get_receive_identifiers()
+        self.assertEqual(Receive.objects.filter(receive_identifier__in=receive_identifiers).count(), 3)
 
     def test_save_batch(self):
         items = []
+        batch = self.batch
         for _ in range(3):
-            items.append(self.new_batch_item_instance())
-        batch_helper = BatchHelper(self.batch)
-        batch_helper.save(items)
+            items.append(self.new_batch_item_instance(batch))
+        batch.save_batch_items(items)
         self.assertEqual(BatchItem.objects.filter(batch=self.batch).count(), 3)
 
     def test_save_batch_already_received(self):
-        self.batch.status = RECEIVED
-        self.batch.save()
+        batch = self.batch
+        batch.status = RECEIVED
+        batch.save()
         items = []
         for _ in range(3):
-            items.append(self.new_batch_item_instance())
-        batch_helper = BatchHelper(self.batch)
-        self.assertRaises(AlreadyReceivedError, batch_helper.save, items)
+            items.append(self.new_batch_item_instance(batch))
+        self.assertRaises(AlreadyReceivedError, batch.save_batch_items, items)
 
     def test_batch_status_open(self):
-        self.assertEqual(self.batch.status, OPEN)
+        batch = self.batch
+        self.assertEqual(batch.status, OPEN)
         items = []
         for _ in range(3):
-            items.append(self.new_batch_item_instance())
-        batch_helper = BatchHelper(self.batch)
-        batch_helper.save(items)
+            items.append(self.new_batch_item_instance(batch))
+        batch.save_batch_items(items)
         self.assertEqual(self.batch.status, SAVED)
 
     def test_batch_status_received(self):
         items = []
+        batch = self.batch
         for _ in range(3):
             items.append(self.new_batch_item_instance())
-        batch_helper = BatchHelper(self.batch)
-        batch_helper.save(items)
-        batch_helper.receive()
-        self.assertEqual(self.batch.status, RECEIVED)
+        batch.save_batch_items(items)
+        batch.receive_batch_items()
+        self.assertEqual(batch.status, RECEIVED)

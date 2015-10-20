@@ -49,7 +49,7 @@ class Receive(ReceiveBaseFieldsMixin, BaseUuidModel):
         default=timezone.now
     )
 
-    patient = models.ForeignKey(Patient)
+    patient = models.ForeignKey(Patient, null=True, blank=False)
 
     specimen_reference = models.CharField(
         max_length=25,

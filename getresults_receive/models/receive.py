@@ -5,7 +5,7 @@ from edc_base.model.models import BaseUuidModel
 from edc_base.audit_trail import AuditTrail
 from getresults_patient.models import Patient
 
-from .identifiers import ReceiveIdentifier
+from .receive_identifier import ReceiveIdentifier
 
 
 class ReceiveBaseFieldsMixin(models.Model):

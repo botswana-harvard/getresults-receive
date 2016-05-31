@@ -17,7 +17,6 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from getresults.admin import admin_site
-from getresults import urls as getresults_urls
 
 from .views import DashboardView, ReceiveView, BatchPresetView, DisplayView
 
@@ -31,5 +30,5 @@ urlpatterns = [
     url(r'^receive_batch/', BatchPresetView.as_view(), name='receive_batch'),
     url(r'^batch/(?P<batch_identifier>[0-9A-Z\-]+)/', DisplayView.as_view(), name='batch'),
     url(r'^dashboard/', DashboardView.as_view(), name='dashboard'),
-    url(r'', include(getresults_urls)),
+    # url(r'', include('getresults.urls')),
 ]

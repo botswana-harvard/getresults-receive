@@ -4,7 +4,7 @@ from django.apps import apps
 from django.db import IntegrityError, transaction
 
 from edc_base.model.models import BaseUuidModel
-from getresults_identifier.batch_identifier import BatchIdentifier
+from edc_identifier.batch_identifier import BatchIdentifier
 
 from ..constants import SAVED, OPEN, RECEIVED
 from ..exceptions import BatchError, BatchReceiveError, BatchSaveError, AlreadyReceivedError

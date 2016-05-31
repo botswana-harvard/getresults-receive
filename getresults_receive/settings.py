@@ -42,10 +42,10 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_crypto_fields',
     'getresults',
-    'getresults_identifier',
+    'edc_identifier',
     'getresults_patient',
     'getresults_receive',
-    'getresults_aliquot',
+    # 'getresults_aliquot',
 )
 
 MIDDLEWARE_CLASSES = (

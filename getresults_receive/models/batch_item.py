@@ -5,7 +5,7 @@ from edc_base.model.models import BaseUuidModel
 from getresults_patient.models import Patient
 
 from .batch import Batch
-from getresults_receive.models.receive import ReceiveBaseFieldsMixin
+from .receive import ReceiveBaseFieldsMixin
 
 
 class BatchItem(ReceiveBaseFieldsMixin, BaseUuidModel):

@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 from edc_base.model.models import BaseUuidModel
-from edc_base.audit_trail import AuditTrail
+from simple_history.models import HistoricalRecords as AuditTrail
 from getresults_patient.models import Patient
 
 from .receive_identifier import ReceiveIdentifier
